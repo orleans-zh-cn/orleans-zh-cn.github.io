@@ -22,6 +22,6 @@ jobs:
       uses: SamKirkland/FTP-Deploy-Action@4.0.0
       with:
         server: ftps://waws-prod-hk1-003.ftp.azurewebsites.windows.net
-        server-dir: ./site/wwwroot
+        server-dir: ./site/wwwroot/
         username: orleans\$orleans
         password: ${{ secrets.ftp_password }}
