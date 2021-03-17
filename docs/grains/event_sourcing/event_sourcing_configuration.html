@@ -79,11 +79,11 @@
 
 <h2 id="配置项目引用">配置项目引用</h2>
 <h3 id="grains接口">grains接口</h3>
-<p>和以前一样，接口只依赖于<code>微软.orleans.core</code>包，因为grain接口独立于实现。</p>
+<p>和以前一样，接口只依赖于<code>Microsoft.Orleans.Core</code>包，因为grain接口独立于实现。</p>
 <h3 id="grains实现">Grains实现</h3>
-<p>日志需要从<code>行程&lt;s，e&gt;</code>或<code>日志记录&lt;s&gt;</code>，定义见<code>Microsoft.Orleans.EventSourcing</code>包裹。</p>
+<p>日志需要从<code>JournaledGrain&lt;S,E&gt;</code> 或 <code>JournaledGrain&lt;S&gt;</code>，定义见<code>Microsoft.Orleans.EventSourcing</code>包。</p>
 <h3 id="日志一致性提供程序">日志一致性提供程序</h3>
-<p>我们目前包括三个日志一致性提供程序(用于状态存储、日志存储和自定义存储)。 这三个都包含在<code>Microsoft.Orleans.EventSourcing</code>包装也一样。 因此，所有被记录的Grains都已经可以获得这些。 有关这些提供程序的功能和区别的说明，请参见<a href="log_consistency_providers.html">包括日志一致性提供程序</a>.</p>
+<p>我们目前包括三个日志一致性提供程序(用于状态存储、日志存储和自定义存储)。 所有这三个都包含在 <code>Microsoft.Orleans.EventSourcing</code> 包中。 因此，所有被记录的Grains都已经可以获得这些。 有关这些提供程序的功能和区别的说明，请参见<a href="log_consistency_providers.html">包括日志一致性提供程序</a>.</p>
 <h2 id="群集配置">群集配置</h2>
 <p>日志一致性提供程序的配置与任何其他Orleans提供程序一样。 例如，要包含所有三个提供者(当然，您可能不需要全部三个提供者)，请将此添加到<code>&lt;Globals&gt;</code>配置文件的元素：</p>
 <pre><code class="lang-xml">&lt;LogConsistencyProviders&gt;
