@@ -81,9 +81,9 @@
 <p><strong>Note</strong>: This article and its sample are a work in progress. Any feedback, PR or suggestion is very welcome.</p>
 </blockquote>
 <h2 id="deploying-orleans-solutions-to-docker">Deploying Orleans solutions to Docker</h2>
-<p>Deploying Orleans to Docker can be tricky given the way Docker orchestrators and clustering stacks was designed. The most complicated thing is to understand the concept of <em>Overlay Network</em> from Docker Swarm and Kubernets Networking model. </p>
+<p>Deploying Orleans to Docker can be tricky given the way Docker orchestrators and clustering stacks was designed. The most complicated thing is to understand the concept of <em>Overlay Network</em> from Docker Swarm and Kubernets Networking model.</p>
 <p>Docker containers and networking model were designed to run mostly stateless and immutable containers. So, spinning up a cluster running node.js or nginx applications, is pretty easy. However, if you try to use something more elaborate, like a real clustered or distributed application (like Orleans-based ones) you will eventually have trouble setting it up. It is possible, but not as simple as web-based applications.</p>
-<p>Docker clustering consists of putting together multiple hosts to work as a single pool of resources, managed using a <em>Container Orchestrator</em>. <em>Docker Inc.</em> provide <strong>Swarm</strong> as their option for Container Orchestration while <em>Google</em> has <strong>Kubernetes</strong> (aka <strong>K8s</strong>). There are other Orchestrators like <strong>DC/OS</strong>, <strong>Mesos</strong>, etc., but in this document we will talk about Swarm and K8s as they are more widely used. </p>
+<p>Docker clustering consists of putting together multiple hosts to work as a single pool of resources, managed using a <em>Container Orchestrator</em>. <em>Docker Inc.</em> provide <strong>Swarm</strong> as their option for Container Orchestration while <em>Google</em> has <strong>Kubernetes</strong> (aka <strong>K8s</strong>). There are other Orchestrators like <strong>DC/OS</strong>, <strong>Mesos</strong>, etc., but in this document we will talk about Swarm and K8s as they are more widely used.</p>
 <p>The same grain interfaces and implementation which run anywhere Orleans is already supported, will run on Docker containers as well, so no special considerations are needed in order to be able to run your application in Docker containers.</p>
 <p>The <a href="https://github.com/dotnet/orleans/tree/master/Samples/Orleans-Docker">Orleans-Docker</a> sample provides a working example of how to run two console applications. One as Orleans Client and another as Silo, and the details are described below.</p>
 <p>The concepts discussed here, can be used on both .Net Core and .Net 4.6.1 flavors of Orleans but to ilustrate the cross-platform nature of Docker and .Net Core, we are going to focus on the example considering you are using .Net Core. Platform-specific (Windows/Linux/OSX) details may be provide along this article.</p>
@@ -92,14 +92,14 @@
 <ul>
 <li><a href="https://www.docker.com/community-edition#/download">Docker</a> - Docker4X has a easy-to-use installer for the major supported platforms. It contains Docker engine and also Docker Swarm.</li>
 <li><a href="https://kubernetes.io/docs/tutorials/stateless-application/hello-minikube/">Kubernetes (K8s)</a> - Google&#39;s offer for Container Orchestration. It contains a guidance to install <em>Minikube</em> (a local deployment of K8s) and <em>kubectl</em> along with all its dependencies.</li>
-<li><a href="https://dot.net">.Net Core</a> - Cross-platform flavor of .Net </li>
+<li><a href="https://dot.net">.Net Core</a> - Cross-platform flavor of .Net</li>
 <li><a href="https://code.visualstudio.com/">Visual Studio Code (VSCode)</a> - You can use whatever IDE you want. VSCode is cross-platform so we are using it to ensure it works on all platforms. Once you installed VSCode, install the <a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.csharp">C# extension</a>.</li>
 </ul>
-<blockquote><p><strong>Note</strong>: You are not required to have Kubernetes installed if you are not going to use it. Docker4X installer already includes Swarm so no extra installation is required to use it. </p>
-<p><strong>Note for Windows Users</strong>: On Windows, Docker installer will enable Hyper-V at installation process. As this article and its examples are using .Net Core, the container images used are based on <strong>Windows Server NanoServer</strong>. If you don&#39;t plan to use .Net Core and will target .Net 4.6.1 full framework, the image used should be <strong>Windows Server Core</strong> and the 1.4+ version of Orleans (which supports only .net full framework). </p>
+<blockquote><p><strong>Note</strong>: You are not required to have Kubernetes installed if you are not going to use it. Docker4X installer already includes Swarm so no extra installation is required to use it.</p>
+<p><strong>Note for Windows Users</strong>: On Windows, Docker installer will enable Hyper-V at installation process. As this article and its examples are using .Net Core, the container images used are based on <strong>Windows Server NanoServer</strong>. If you don&#39;t plan to use .Net Core and will target .Net 4.6.1 full framework, the image used should be <strong>Windows Server Core</strong> and the 1.4+ version of Orleans (which supports only .net full framework).</p>
 </blockquote>
 <h2 id="creating-orleans-solution">Creating Orleans Solution</h2>
-<p>The following instructions show how to create a regular Orleans solution using the new <code>dotnet</code> tooling. </p>
+<p>The following instructions show how to create a regular Orleans solution using the new <code>dotnet</code> tooling.</p>
 <blockquote><p><strong>Note</strong>: Please adapt the commands to whatever is appropriate in your platform. Also, the directory structure is just a suggestion. Please adapt it to your needs.</p>
 </blockquote>
 <pre><code class="lang-bash">mkdir Orleans-Docker
@@ -131,8 +131,8 @@ dotnet add src/OrleansSilo/OrleansSilo.csproj package Microsoft.Orleans.OrleansR
 dotnet restore
 </code></pre><p>Ok, now you have all the basic dependencies to run a simple Orleans application. Note that so far, nothing changed from your regular Orleans application. Now, lets add some code so we can do something with it.</p>
 <h1 id="implementing-your-orleans-application">Implementing your Orleans Application</h1>
-<p>Assuming that you are using <strong>VSCode</strong>, from the solution directory, run <code>code .</code>. That will open the directory in <strong>VSCode</strong> and load the solution. </p>
-<p>This is the solution structure we just created previously. </p>
+<p>Assuming that you are using <strong>VSCode</strong>, from the solution directory, run <code>code .</code>. That will open the directory in <strong>VSCode</strong> and load the solution.</p>
+<p>This is the solution structure we just created previously.</p>
 <p><img src="docker-orleans-solution.png" alt=""></p>
 <p>We also added <code>Program.cs</code>, <code>OrleansHostWrapper</code>, <code>IGreetingGrain</code> and <code>GreetingGrain</code> files to the interfaces and grain projects respectively and here is the code for those files:</p>
 <p><code>IGreetingGrain.cs</code>:</p>
@@ -361,7 +361,7 @@ WORKDIR /app
 ENTRYPOINT [&quot;dotnet&quot;, &quot;OrleansSilo.dll&quot;]
 COPY . /app
 </code></pre><h1 id="docker-compose">docker-compose</h1>
-<p>The <code>docker-compose.yml</code> file, essentially defines (within a project) a set of services and its dependencies at service level. Each service contains one or more instances of a given container, which is based on the images you selected on your Dockerfile. More details on the <code>docker-compose</code> can be found on <a href="https://docs.docker.com/compose/">docker-compose documentation</a>. </p>
+<p>The <code>docker-compose.yml</code> file, essentially defines (within a project) a set of services and its dependencies at service level. Each service contains one or more instances of a given container, which is based on the images you selected on your Dockerfile. More details on the <code>docker-compose</code> can be found on <a href="https://docs.docker.com/compose/">docker-compose documentation</a>.</p>
 <p>For an Orleans deployment, a common use case is to have a <code>docker-compose.yml</code> which contains two services. One for Orleans Silo, and other for Orleans Client. The Client would have a dependency on the Silo and that means, it will only start after the Silo service is up. Another case is to add a storage/database service/container, like for example SQL Server, which should start first before the client and the silo, so both services should take a dependency on it.</p>
 <blockquote><p><strong>Note</strong>: Before you read further (and eventually get crazy with it), please note that <em>identation</em> <strong>matters</strong> in <code>docker-compose</code> files. So pay attention to it if you have any problem.</p>
 </blockquote>

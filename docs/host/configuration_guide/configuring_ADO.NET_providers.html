@@ -77,8 +77,7 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="configuring-adonet-providers">Configuring ADO.NET Providers</h1>
 
-<p>Any reliable deployment of Orleans requires using persistent storage to keep system state, specifically Orleans cluster membership table and reminders.
-One of the available options is using a SQL database via the ADO.NET providers.</p>
+<p>Any reliable deployment of Orleans requires using persistent storage to keep system state, specifically Orleans cluster membership table and reminders. One of the available options is using a SQL database via the ADO.NET providers.</p>
 <p>In order to use ADO.NET for persistence, clustering or reminders, one needs to configure the ADO.NET providers as part of the silo configuration, and, in case of clustering, also as part of the client configurations.</p>
 <p>The silo configuration code should look like this:</p>
 <pre><code class="lang-c#">var siloHostBuilder = new SiloHostBuilder();
@@ -112,11 +111,9 @@ siloHostBuilder.UseAdoNetClustering(options =&gt;
                 options.Invariant = invariant;
                 options.ConnectionString = connectionString;
             });
-</code></pre><p>Where the <code>ConnectionString</code> is set to a valid AdoNet Server connection string. </p>
-<p>In order to use ADO.NET providers for persistence, reminders or clustering, there are scripts for creating database artifacts, to which all servers that will be hosting Orleans silos need to have access.
-Lack of access to the target database is a typical mistake we see developers making.</p>
-<p>The scripts will be copied to project directory \OrleansAdoNetContent where each supported ADO.NET extensions has its own directory, after you install or do a nuget restore on the AdoNet extension nugets. We split AdoNet nugets into per feature nugets:
-<code>Microsoft.Orleans.Clustering.AdoNet</code> for clustering, <code>Microsoft.Orleans.Persistence.AdoNet</code> for persistence and <code>Microsoft.Orleans.Reminders.AdoNet</code> for reminders.</p>
+</code></pre><p>Where the <code>ConnectionString</code> is set to a valid AdoNet Server connection string.</p>
+<p>In order to use ADO.NET providers for persistence, reminders or clustering, there are scripts for creating database artifacts, to which all servers that will be hosting Orleans silos need to have access. Lack of access to the target database is a typical mistake we see developers making.</p>
+<p>The scripts will be copied to project directory \OrleansAdoNetContent where each supported ADO.NET extensions has its own directory, after you install or do a nuget restore on the AdoNet extension nugets. We split AdoNet nugets into per feature nugets: <code>Microsoft.Orleans.Clustering.AdoNet</code> for clustering, <code>Microsoft.Orleans.Persistence.AdoNet</code> for persistence and <code>Microsoft.Orleans.Reminders.AdoNet</code> for reminders.</p>
 </article>
           </div>
           

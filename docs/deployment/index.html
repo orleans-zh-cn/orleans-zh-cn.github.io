@@ -77,21 +77,11 @@
             <article class="content wrap" id="_content" data-uid="">
 <h3 id="orleans-application">Orleans Application</h3>
 
-<p>A typical Orleans application consists of a cluster of server processes (silos) where grains live, and a set of client processes, usually web servers, that receive external requests, turn them into grain method calls, and return results back.
-Hence, the first thing one needs to do to run an Orleans application is to start a cluster of silos.
-For testing purposes, a cluster can consist of a single silo.
-For a reliable production deployment, we obviously want more than one silos in a cluster for fault tolerance and scale.</p>
-<p>Once the cluster is running, we can start one or more client processes that connect to the cluster and can send requests to the grains.
-Clients connect to a special TCP endpoint on silos - gateway.
-By default, every silo in a cluster has a client gateway enabled.
-So clients can connect to all silos in parallel for better performance and resilience.</p>
+<p>A typical Orleans application consists of a cluster of server processes (silos) where grains live, and a set of client processes, usually web servers, that receive external requests, turn them into grain method calls, and return results back. Hence, the first thing one needs to do to run an Orleans application is to start a cluster of silos. For testing purposes, a cluster can consist of a single silo. For a reliable production deployment, we obviously want more than one silos in a cluster for fault tolerance and scale.</p>
+<p>Once the cluster is running, we can start one or more client processes that connect to the cluster and can send requests to the grains. Clients connect to a special TCP endpoint on silos - gateway. By default, every silo in a cluster has a client gateway enabled. So clients can connect to all silos in parallel for better performance and resilience.</p>
 <h3 id="configuring-and-starting-a-silo">Configuring and Starting a Silo</h3>
-<p>A silo is configured programmatically via a <code>ClusterConfiguration</code> object.
-It can be instantiated and populated directly, load settings from a file, or created with several available helper methods for different deployment environments.
-For local testing, the easiest way to go is to use <code>ClusterConfiguration.LocalhostPrimarySilo()</code> helper method.
-The configuration object is then passed to a new instance of <code>SiloHost</code> class, that can be initialized and started after that.</p>
-<p>You can create an empty console application project targeting .NET Framework 4.6.1 or higher for hosting a silo.
-Add the <code>Microsoft.Orleans.Server</code> NuGet meta-package to the project.</p>
+<p>A silo is configured programmatically via a <code>ClusterConfiguration</code> object. It can be instantiated and populated directly, load settings from a file, or created with several available helper methods for different deployment environments. For local testing, the easiest way to go is to use <code>ClusterConfiguration.LocalhostPrimarySilo()</code> helper method. The configuration object is then passed to a new instance of <code>SiloHost</code> class, that can be initialized and started after that.</p>
+<p>You can create an empty console application project targeting .NET Framework 4.6.1 or higher for hosting a silo. Add the <code>Microsoft.Orleans.Server</code> NuGet meta-package to the project.</p>
 <pre><code>PM&gt; Install-Package Microsoft.Orleans.Server
 </code></pre><p>Here is an example of how a local silo can be started:</p>
 <pre><code class="lang-csharp">var siloConfig = ClusterConfiguration.LocalhostPrimarySilo(); 
@@ -106,15 +96,9 @@ Console.ReadLine();
 // shut the silo down after we are done.
 silo.ShutdownOrleansSilo();
 </code></pre><h3 id="configuring-and-connecting-a-client">Configuring and Connecting a Client</h3>
-<p>Client for connecting to a cluster of silos and sending requests to grains is configured programmatically via a <code>ClientConfiguration</code> object and a <code>ClientBuilder</code>.
-<code>ClientConfiguration</code> object can be instantiated and populated directly, load settings from a file, or created with several available helper methods for different deployment environments.
-For local testing, the easiest way to go is to use <code>ClientConfiguration.LocalhostSilo()</code> helper method.
-The configuration object is then passed to a new instance of <code>ClientBuilder</code> class.</p>
-<p><code>ClientBuilder</code> exposes more methods for configuring additional client features.
-After that <code>Build</code> method of the <code>ClientBuilder</code> object is called to get an implementation of <code>IClusterClient</code> interface.
-Finally, we call <code>Connect()</code> method on the returned object to connect to the cluster.</p>
-<p>You can create an empty console application project targeting .NET Framework 4.6.1 or higher for running a client or reuse the console application project you created for hosting a silo.
-Add the <code>Microsoft.Orleans.Client</code> NuGet meta-package to the project.</p>
+<p>Client for connecting to a cluster of silos and sending requests to grains is configured programmatically via a <code>ClientConfiguration</code> object and a <code>ClientBuilder</code>. <code>ClientConfiguration</code> object can be instantiated and populated directly, load settings from a file, or created with several available helper methods for different deployment environments. For local testing, the easiest way to go is to use <code>ClientConfiguration.LocalhostSilo()</code> helper method. The configuration object is then passed to a new instance of <code>ClientBuilder</code> class.</p>
+<p><code>ClientBuilder</code> exposes more methods for configuring additional client features. After that <code>Build</code> method of the <code>ClientBuilder</code> object is called to get an implementation of <code>IClusterClient</code> interface. Finally, we call <code>Connect()</code> method on the returned object to connect to the cluster.</p>
+<p>You can create an empty console application project targeting .NET Framework 4.6.1 or higher for running a client or reuse the console application project you created for hosting a silo. Add the <code>Microsoft.Orleans.Client</code> NuGet meta-package to the project.</p>
 <pre><code>PM&gt; Install-Package Microsoft.Orleans.Client
 </code></pre><p>Here is an example of how a client can connect to a local silo:</p>
 <pre><code class="lang-csharp">var config = ClientConfiguration.LocalhostSilo();
@@ -122,9 +106,7 @@ var builder = new ClientBuilder().UseConfiguration(config).
 var client = builder.Build();
 await client.Connect();
 </code></pre><h3 id="production-configurations">Production Configurations</h3>
-<p>The configuration examples we used here are for testing silos and clients running on the same machine as <code>localhost</code>.
-In production, silos and clients usually run on different servers and are configured with one of the reliable cluster configuration options.
-You can find more about that in the <a href="../host/configuration_guide/index.html">Configuration Guide</a> and in the description of <a href="../implementation/cluster_management.html">Cluster Management</a>.</p>
+<p>The configuration examples we used here are for testing silos and clients running on the same machine as <code>localhost</code>. In production, silos and clients usually run on different servers and are configured with one of the reliable cluster configuration options. You can find more about that in the <a href="../host/configuration_guide/index.html">Configuration Guide</a> and in the description of <a href="../implementation/cluster_management.html">Cluster Management</a>.</p>
 </article>
           </div>
           

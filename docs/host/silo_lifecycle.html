@@ -105,9 +105,7 @@
 <li>Last - Last stage in service&#39;s lifecycle</li>
 </ul>
 <h2 id="logging">Logging</h2>
-<p>Due to the inversion of control, where participants join the lifecycle rather than the lifecycle having some centralized set of initialization steps, it’s not always clear from the code what the startup/shutdown order is.
-To help address this, logging has been added prior to silo startup to report what components are participating at each stage.
-These logs are recorded at Information log level on the <code>Orleans.Runtime.SiloLifecycleSubject</code> logger.  For instance:</p>
+<p>Due to the inversion of control, where participants join the lifecycle rather than the lifecycle having some centralized set of initialization steps, it’s not always clear from the code what the startup/shutdown order is. To help address this, logging has been added prior to silo startup to report what components are participating at each stage. These logs are recorded at Information log level on the <code>Orleans.Runtime.SiloLifecycleSubject</code> logger.  For instance:</p>
 <p><em>Information, Orleans.Runtime.SiloLifecycleSubject, “Stage 2000: Orleans.Statistics.PerfCounterEnvironmentStatistics, Orleans.Runtime.InsideRuntimeClient, Orleans.Runtime.Silo”</em></p>
 <p><em>Information, Orleans.Runtime.SiloLifecycleSubject, “Stage 4000: Orleans.Runtime.Silo”</em></p>
 <p><em>Information, Orleans.Runtime.SiloLifecycleSubject, “Stage 10000: Orleans.Runtime.Versions.GrainVersionStore, Orleans.Storage.AzureTableGrainStorage-Default, Orleans.Storage.AzureTableGrainStorage-PubSubStore”</em></p>
@@ -125,12 +123,9 @@ public interface ILifecycleParticipant&lt;TLifecycleObservable&gt;
 {
     void Participate(TLifecycleObservable lifecycle);
 }
-</code></pre><p>Upon silo start, all participants (<code>ILifecycleParticipant&lt;ISiloLifecycle&gt;</code>) in the container will be given an opportunity to participate by calling their <code>Participate(..)</code> behavior.
-Once all have had the opportunity to participate, the silo’s observable lifecycle will start all stages in order.</p>
+</code></pre><p>Upon silo start, all participants (<code>ILifecycleParticipant&lt;ISiloLifecycle&gt;</code>) in the container will be given an opportunity to participate by calling their <code>Participate(..)</code> behavior. Once all have had the opportunity to participate, the silo’s observable lifecycle will start all stages in order.</p>
 <h2 id="example">Example</h2>
-<p>With the introduction of the silo lifecycle, bootstrap providers, which used to allow application developers to inject logic at the provider initialization phase, are no longer necessary, since application logic can now be injected at any stage of silo startup.
-Nonetheless, we added a ‘startup task’ façade to aid the transition for developers who had been using bootstrap providers.
-As an example of how components can be developed which take part in the silo’s lifecycle, we’ll look at the startup task façade.</p>
+<p>With the introduction of the silo lifecycle, bootstrap providers, which used to allow application developers to inject logic at the provider initialization phase, are no longer necessary, since application logic can now be injected at any stage of silo startup. Nonetheless, we added a ‘startup task’ façade to aid the transition for developers who had been using bootstrap providers. As an example of how components can be developed which take part in the silo’s lifecycle, we’ll look at the startup task façade.</p>
 <p>The startup task needs only to inherit from <code>ILifecycleParticipant&lt;ISiloLifecycle&gt;</code> and subscribe the application logic to the silo lifecycle at the specified stage.</p>
 <pre><code class="lang-csharp">class StartupTask : ILifecycleParticipant&lt;ISiloLifecycle&gt;
 {
@@ -157,8 +152,7 @@ As an example of how components can be developed which take part in the silo’s
 }
 </code></pre><p>From the above implementation, we can see that in the StartupTask’s <code>Participate(..)</code> call it subscribes to the silo lifecycle at the configured stage, passing the application callback rather than its own initialization logic.</p>
 <p>Components that need to be initialized at a given stage would provide their own callback, but the pattern is the same.</p>
-<p>Now that we have a StartupTask which will ensure that the application’s hook is called at the configured stage, we need to ensure that the StartupTask participates in the silo lifecycle.
-For this we need only register it in the container.</p>
+<p>Now that we have a StartupTask which will ensure that the application’s hook is called at the configured stage, we need to ensure that the StartupTask participates in the silo lifecycle. For this we need only register it in the container.</p>
 <p>We do this with an extension function on the SiloHost builder.</p>
 <pre><code class="lang-csharp">public static ISiloHostBuilder AddStartupTask(
     this ISiloHostBuilder builder,

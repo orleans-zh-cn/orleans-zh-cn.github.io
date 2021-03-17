@@ -81,15 +81,12 @@
 <p>There are 5 key NuGet packages you will need to use in most scenarios:</p>
 <h3 id="microsoft-orleans-core-abstractionshttpswwwnugetorgpackagesmicrosoftorleanscoreabstractions"><a href="https://www.nuget.org/packages/Microsoft.Orleans.Core.Abstractions/">Microsoft Orleans Core Abstractions</a></h3>
 <pre><code class="lang-powershell">PM&gt; Install-Package Microsoft.Orleans.Core.Abstractions
-</code></pre><p>Contains Orleans.Core.Abstractions.dll, which defines Orleans public types that are needed for developing application code (grain interfaces and classes).
-This package is needs to be directly or indirectly referenced by any Orleans project.
-Add it to your projects that define grain interfaces and classes.</p>
+</code></pre><p>Contains Orleans.Core.Abstractions.dll, which defines Orleans public types that are needed for developing application code (grain interfaces and classes). This package is needs to be directly or indirectly referenced by any Orleans project. Add it to your projects that define grain interfaces and classes.</p>
 <h3 id="microsoft-orleans-build-time-code-generation">Microsoft Orleans Build-time Code Generation</h3>
 <ul>
 <li><p><a href="https://www.nuget.org/packages/Microsoft.Orleans.OrleansCodeGenerator.Build/">Microsoft.Orleans.OrleansCodeGenerator.Build</a>.</p>
 <pre><code class="lang-powershell">PM&gt; Install-Package Microsoft.Orleans.OrleansCodeGenerator.Build
-</code></pre><p>  Appeared in Orleans 1.2.0. Build time support for grain interfaces and implementation projects.
-  Add it to your grain interfaces and implementation projects to enable code generation of grain references and serializers.</p>
+</code></pre><p>  Appeared in Orleans 1.2.0. Build time support for grain interfaces and implementation projects. Add it to your grain interfaces and implementation projects to enable code generation of grain references and serializers.</p>
 </li>
 <li><p><a href="https://www.nuget.org/packages/Microsoft.Orleans.CodeGenerator.MSBuild/">Microsoft.Orleans.CodeGenerator.MSBuild</a>.</p>
 <pre><code class="lang-powershell">PM&gt; Install-Package Microsoft.Orleans.CodeGenerator.MSBuild
@@ -115,9 +112,7 @@ Add it to your projects that define grain interfaces and classes.</p>
 </ul>
 <h3 id="microsoft-orleans-core-libraryhttpswwwnugetorgpackagesmicrosoftorleanscore"><a href="https://www.nuget.org/packages/Microsoft.Orleans.Core/">Microsoft Orleans Core Library</a></h3>
 <pre><code class="lang-powershell">PM&gt; Install-Package Microsoft.Orleans.Core
-</code></pre><p>Contains implementation for most Orleans public types used by application code and Orleans clients (frontends).
-Reference it for building libraries and client applications that use Orleans types but don&#39;t deal with hosting or silos.
-Included in Microsoft.Orleans.Client and Microsoft.Orleans.Server meta-packages, and is referenced, directly or indirectly, by most other packages. </p>
+</code></pre><p>Contains implementation for most Orleans public types used by application code and Orleans clients (frontends). Reference it for building libraries and client applications that use Orleans types but don&#39;t deal with hosting or silos. Included in Microsoft.Orleans.Client and Microsoft.Orleans.Server meta-packages, and is referenced, directly or indirectly, by most other packages.</p>
 <h2 id="hosting">Hosting</h2>
 <h3 id="microsoft-orleans-runtimehttpswwwnugetorgpackagesmicrosoftorleansorleansruntime"><a href="https://www.nuget.org/packages/Microsoft.Orleans.OrleansRuntime/">Microsoft Orleans Runtime</a></h3>
 <pre><code class="lang-powershell">PM&gt; Install-Package Microsoft.Orleans.OrleansRuntime 
@@ -194,9 +189,7 @@ Included in Microsoft.Orleans.Client and Microsoft.Orleans.Server meta-packages,
 <h2 id="development-and-testing">Development and Testing</h2>
 <h3 id="microsoft-orleans-providershttpswwwnugetorgpackagesmicrosoftorleansorleansproviders"><a href="https://www.nuget.org/packages/Microsoft.Orleans.OrleansProviders/">Microsoft Orleans Providers</a></h3>
 <pre><code class="lang-powershell">PM&gt; Install-Package Microsoft.Orleans.OrleansProviders
-</code></pre><p>Contains a set of persistence and stream providers that keep data in memory.
-Intended for testing.
-In general, not recommended for production use, unless data loss is care of a silo failure is acceptable.</p>
+</code></pre><p>Contains a set of persistence and stream providers that keep data in memory. Intended for testing. In general, not recommended for production use, unless data loss is care of a silo failure is acceptable.</p>
 <h3 id="microsoft-orleans-testing-host-libraryhttpswwwnugetorgpackagesmicrosoftorleanstestinghost"><a href="https://www.nuget.org/packages/Microsoft.Orleans.TestingHost/">Microsoft Orleans Testing Host Library</a></h3>
 <pre><code class="lang-powershell">PM&gt; Install-Package Microsoft.Orleans.TestingHost
 </code></pre><p>Includes the library for hosting silos and clients in a testing project.</p>

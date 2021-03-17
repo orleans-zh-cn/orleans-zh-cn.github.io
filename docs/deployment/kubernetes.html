@@ -77,8 +77,7 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="kubernetes-hosting">Kubernetes hosting</h1>
 
-<p>Kubernetes is a popular choice for hosting Orleans applications.
-Orleans will run in Kubernetes without specific configuration, however it can also take advantage of extra knowledge which the hosting platform can provide.</p>
+<p>Kubernetes is a popular choice for hosting Orleans applications. Orleans will run in Kubernetes without specific configuration, however it can also take advantage of extra knowledge which the hosting platform can provide.</p>
 <p>The <a href="https://www.nuget.org/packages/Microsoft.Orleans.Hosting.Kubernetes"><code>Microsoft.Orleans.Hosting.Kubernetes</code></a> package adds integration for hosting an Orleans application in a Kubernetes cluster. The package provides an extension method, <code>ISiloBuilder.UseKubernetesHosting</code>, which performs the following actions:</p>
 <ul>
 <li><code>SiloOptions.SiloName</code> is set to the pod name.</li>
@@ -200,24 +199,12 @@ roleRef:
   name: pod-reader
   apiGroup: &#39;&#39;
 </code></pre><h2 id="liveness-readiness-and-startup-probes">Liveness, Readiness, and Startup Probes</h2>
-<p>Kubernetes is able to probe pods to determine the health of a service. For more information, see <a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/">Configure Liveness, Readiness and Startup Probes</a> in Kubernetes&#39; documentation. </p>
-<p>Orleans uses a cluster membership protocol to promptly detect and recover from process or network failures.
-Each node monitors a subset of other nodes, sending periodic probes.
-If a node fails to respond to multiple successive probes from multiple other nodes, then it will be forcibly removed from the cluster.
-Once a failed node learns that is has been removed, it terminates immediately.
-Kubernetes will restart the terminated process and it will attempt to rejoin the cluster.</p>
-<p>Kubernetes&#39; probes can help to determine whether a process in a pod is executing and is not stuck in a zombie state. probes do not verify inter-pod connectivity or responsiveness or perform any application-level functionality checks.
-If a pod fails to respond to a liveness probe, then Kubernetes may eventually terminate that pod and reschedule it.
-Kubernetes&#39; probes and Orleans&#39; probes are therefore complimentary.</p>
-<p>The recommended approach is to configure Liveness Probes in Kubernetes which perform a simple local-only check that the application is performing as intended.
-These probes serve to terminate the process in the event that there is a total freeze, for example due to a runtime fault or another unlikely event.</p>
+<p>Kubernetes is able to probe pods to determine the health of a service. For more information, see <a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/">Configure Liveness, Readiness and Startup Probes</a> in Kubernetes&#39; documentation.</p>
+<p>Orleans uses a cluster membership protocol to promptly detect and recover from process or network failures. Each node monitors a subset of other nodes, sending periodic probes. If a node fails to respond to multiple successive probes from multiple other nodes, then it will be forcibly removed from the cluster. Once a failed node learns that is has been removed, it terminates immediately. Kubernetes will restart the terminated process and it will attempt to rejoin the cluster.</p>
+<p>Kubernetes&#39; probes can help to determine whether a process in a pod is executing and is not stuck in a zombie state. probes do not verify inter-pod connectivity or responsiveness or perform any application-level functionality checks. If a pod fails to respond to a liveness probe, then Kubernetes may eventually terminate that pod and reschedule it. Kubernetes&#39; probes and Orleans&#39; probes are therefore complimentary.</p>
+<p>The recommended approach is to configure Liveness Probes in Kubernetes which perform a simple local-only check that the application is performing as intended. These probes serve to terminate the process in the event that there is a total freeze, for example due to a runtime fault or another unlikely event.</p>
 <h2 id="resource-quotas">Resource quotas</h2>
-<p>Kubernetes works in conjunction with the operating system to implement <a href="https://kubernetes.io/docs/concepts/policy/resource-quotas/">resource quotas</a>.
-This allows CPU and memory reservations and/or limits to be enforced.
-For a primary application which is serving interactive load, we recommend not implementing restrictive limits unless necessary.
-It is important to note that requests and limits are substantially different in their meaning and where they are implemented.
-Before setting requests or limits, take the time to gain a detailed understanding of how they are implemented and enforced.
-For example, memory may not be measured uniformly between Kubernetes, the Linux kernel, and your monitoring system. CPU quotas may not be enforced in the way that you expect.</p>
+<p>Kubernetes works in conjunction with the operating system to implement <a href="https://kubernetes.io/docs/concepts/policy/resource-quotas/">resource quotas</a>. This allows CPU and memory reservations and/or limits to be enforced. For a primary application which is serving interactive load, we recommend not implementing restrictive limits unless necessary. It is important to note that requests and limits are substantially different in their meaning and where they are implemented. Before setting requests or limits, take the time to gain a detailed understanding of how they are implemented and enforced. For example, memory may not be measured uniformly between Kubernetes, the Linux kernel, and your monitoring system. CPU quotas may not be enforced in the way that you expect.</p>
 </article>
           </div>
           

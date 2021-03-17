@@ -77,13 +77,9 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="orleans-azure-queue-streams-implementation-details">Orleans Azure Queue Streams Implementation Details</h1>
 
-<p>Each stream provider (Azure Queues, EventHub, SMS, SQS, ...) has it&#39;s own queue specific details and configuration.
-This section provides some details about the usage, configuration and implementation of <strong>Orleans Azure Queue Streams</strong>.
-This section is not comprehensive, and more details are available in the streaming tests, which contain most of the configuration options, specifically <a href="https://github.com/dotnet/orleans/tree/master/test/Extensions/TesterAzureUtils/Streaming/AQClientStreamTests.cs"><strong><code>AQClientStreamTests</code></strong></a>, <a href="https://github.com/dotnet/orleans/tree/master/test/Extensions/TesterAzureUtils/Streaming/AQSubscriptionMultiplicityTests.cs"><strong><code>AQSubscriptionMultiplicityTests</code></strong></a>, and the extension functions for <a href="https://github.com/dotnet/orleans/tree/master/src/Azure/Orleans.Streaming.AzureStorage/Providers/Streams/AzureQueue/AzureQueueStreamBuilder.cs"><strong><code>IAzureQueueStreamConfigurator</code></strong></a>  and <a href="https://github.com/dotnet/orleans/tree/master/src/Orleans.Runtime.Abstractions/Streams/ISiloPersistentStreamConfigurator.cs"><strong><code>ISiloPersistentStreamConfigurator</code></strong></a>.</p>
+<p>Each stream provider (Azure Queues, EventHub, SMS, SQS, ...) has it&#39;s own queue specific details and configuration. This section provides some details about the usage, configuration and implementation of <strong>Orleans Azure Queue Streams</strong>. This section is not comprehensive, and more details are available in the streaming tests, which contain most of the configuration options, specifically <a href="https://github.com/dotnet/orleans/tree/master/test/Extensions/TesterAzureUtils/Streaming/AQClientStreamTests.cs"><strong><code>AQClientStreamTests</code></strong></a>, <a href="https://github.com/dotnet/orleans/tree/master/test/Extensions/TesterAzureUtils/Streaming/AQSubscriptionMultiplicityTests.cs"><strong><code>AQSubscriptionMultiplicityTests</code></strong></a>, and the extension functions for <a href="https://github.com/dotnet/orleans/tree/master/src/Azure/Orleans.Streaming.AzureStorage/Providers/Streams/AzureQueue/AzureQueueStreamBuilder.cs"><strong><code>IAzureQueueStreamConfigurator</code></strong></a>  and <a href="https://github.com/dotnet/orleans/tree/master/src/Orleans.Runtime.Abstractions/Streams/ISiloPersistentStreamConfigurator.cs"><strong><code>ISiloPersistentStreamConfigurator</code></strong></a>.</p>
 <h2 id="overview">Overview</h2>
-<p>Orleans Azure Queue requires the package <strong>Microsoft.Orleans.Streaming.AzureStorage</strong>.
-The package contains - in addition to the implementation - also some extension methods that make the configuration at silo startup easier.
-The minimal configuration requires at least to specify the connection string, as example:</p>
+<p>Orleans Azure Queue requires the package <strong>Microsoft.Orleans.Streaming.AzureStorage</strong>. The package contains - in addition to the implementation - also some extension methods that make the configuration at silo startup easier. The minimal configuration requires at least to specify the connection string, as example:</p>
 <pre><code class="lang-csharp">hostBuilder
   .AddAzureQueueStreams(&quot;AzureQueueProvider&quot;, configurator =&gt; {
     configurator.ConfigureAzureQueue(
@@ -100,14 +96,10 @@ The minimal configuration requires at least to specify the connection string, as
   .AddAzureTableGrainStorage(&quot;PubSubStore&quot;, options =&gt; {
     options.ConnectionString = &quot;xxx&quot;;
   })
-</code></pre><p>The pulling agents will pull repeatedly until there are no more messages on a queue, then <strong>delay</strong> for a configurable period before continuing to pull. This process occurs for <strong>each queue</strong>.
-Internally the pulling agents place messages in a <strong>cache</strong> (one cache per queue) for delivery to consumers, but will stop reading if the cache fills up. 
-Messages are removed from the cache once consumers process the messages, so the read rate should roughly be throttled by the processing rate of the consumers.</p>
+</code></pre><p>The pulling agents will pull repeatedly until there are no more messages on a queue, then <strong>delay</strong> for a configurable period before continuing to pull. This process occurs for <strong>each queue</strong>. Internally the pulling agents place messages in a <strong>cache</strong> (one cache per queue) for delivery to consumers, but will stop reading if the cache fills up. Messages are removed from the cache once consumers process the messages, so the read rate should roughly be throttled by the processing rate of the consumers.</p>
 <p>By default it uses <strong>8 queues</strong> (see <a href="https://github.com/dotnet/orleans/tree/master/src/Azure/Orleans.Streaming.AzureStorage/Providers/Streams/AzureQueue/AzureQueueStreamOptions.cs"><strong><code>AzureQueueOptions</code></strong></a>) and 8 related pulling agents, a delay of <strong>100ms</strong> (see <a href="https://github.com/dotnet/orleans/tree/master/src/Orleans.Core/Streams/PersistentStreams/Options/PersistentStreamProviderOptions.cs"><strong><code>StreamPullingAgentOptions.GetQueueMsgsTimerPeriod</code></strong></a>) and a cache size (<code>IQueueCache</code>) of <strong>4096 messages</strong> (see <a href="https://github.com/dotnet/orleans/tree/master/src/OrleansProviders/Streams/Common/SimpleCache/SimpleQueueCacheOptions.cs"><strong><code>SimpleQueueCacheOptions.CacheSize</code></strong></a>).</p>
 <h2 id="configuration">Configuration</h2>
-<p>The default configuration should fit a production environment, but for special needs it&#39;s possible to configure the default behaviour.
-As example, in a development machine it&#39;s possible to reduce the number of the pulling agents to using just one queue.
-This can help to reduce CPU usage and resource pressure.</p>
+<p>The default configuration should fit a production environment, but for special needs it&#39;s possible to configure the default behaviour. As example, in a development machine it&#39;s possible to reduce the number of the pulling agents to using just one queue. This can help to reduce CPU usage and resource pressure.</p>
 <pre><code class="lang-csharp">hostBuilder
   .AddAzureQueueStreams&lt;AzureQueueDataAdapterV2&gt;(&quot;AzureQueueProvider&quot;, optionsBuilder =&gt; optionsBuilder.Configure(options =&gt; {
     options.ConnectionString = &quot;xxx&quot;;
@@ -131,23 +123,18 @@ This can help to reduce CPU usage and resource pressure.</p>
 </ul>
 <p>So we can calculate some parameters of the system:</p>
 <ul>
-<li><p>Streams/queue: Even balancing of streams across queues would be an ideal 10 streams/queue (100 streams / 10 queues).
-But since streams won&#39;t always be evenly balanced over the queues, doubling (or even tripling) the ideal is safer than expecting ideal distribution.
-Hence <strong>20 streams/queue</strong> (10 streams/queue x 2 as safety factor) is probably reasonable.</p>
+<li><p>Streams/queue: Even balancing of streams across queues would be an ideal 10 streams/queue (100 streams / 10 queues). But since streams won&#39;t always be evenly balanced over the queues, doubling (or even tripling) the ideal is safer than expecting ideal distribution. Hence <strong>20 streams/queue</strong> (10 streams/queue x 2 as safety factor) is probably reasonable.</p>
 </li>
 <li><p>Messages/minute: This means each queue will be expected to process up to <strong>1200 messages/minute</strong> (60 messages x 20 streams).</p>
 </li>
 </ul>
 <p>Then we can determine the visibility time to use:</p>
 <ul>
-<li>Visibility time: The cache time (1 minute) is configured to hold 1 minute of messages (so 1200 messages, as we calculated messages/minute above).
-We assumed that each message takes 30 ms to process, then we can expect messages to spend up to 36 seconds in the cache (0.030 sec x 1200 msg = 36 sec), so the visibility time - doubled for safety - would need be over 72 seconds (36 sec of time in cache x 2).
-Accordingly, if we define a bigger cache, that would require a longer visibility time.</li>
+<li>Visibility time: The cache time (1 minute) is configured to hold 1 minute of messages (so 1200 messages, as we calculated messages/minute above). We assumed that each message takes 30 ms to process, then we can expect messages to spend up to 36 seconds in the cache (0.030 sec x 1200 msg = 36 sec), so the visibility time - doubled for safety - would need be over 72 seconds (36 sec of time in cache x 2). Accordingly, if we define a bigger cache, that would require a longer visibility time.</li>
 </ul>
 <p>Final considerations in a real world system:</p>
 <ul>
-<li>Since order is only per stream, and a queue consume many streams, it&#39;s likely that messages will be processed across multiple streams in parallel (as example: we have a grain for stream, which can run in parallel).
-This means we&#39;ll burn through the cache in far less time, but we planned for the worse case: it will give the system room to continue to function well even under intermittent delays and transient errors.</li>
+<li>Since order is only per stream, and a queue consume many streams, it&#39;s likely that messages will be processed across multiple streams in parallel (as example: we have a grain for stream, which can run in parallel). This means we&#39;ll burn through the cache in far less time, but we planned for the worse case: it will give the system room to continue to function well even under intermittent delays and transient errors.</li>
 </ul>
 <p>So we can configure Azure Queue Streams using:</p>
 <pre><code class="lang-csharp">hostBuilder

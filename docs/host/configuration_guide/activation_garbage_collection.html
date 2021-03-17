@@ -100,8 +100,7 @@
 <h3 id="delaying-activation-gc">Delaying Activation GC</h3>
 <p>A grain activation can delay its own Activation GC, by calling <code>this.DelayDeactivation()</code> method:</p>
 <pre><code class="lang-csharp">protected void DelayDeactivation(TimeSpan timeSpan)
-</code></pre><p>This call will ensure that this activation is not deactivated for at least the specified time duration. It takes priority over Activation Garbage Collection settings specified in the config, but does not cancel them.
-Therefore, this call provides an additional hook to <strong>delay the deactivation beyond what is specified in the Activation Garbage Collection settings</strong>. This call can not be used to expedite Activation Garbage Collection.</p>
+</code></pre><p>This call will ensure that this activation is not deactivated for at least the specified time duration. It takes priority over Activation Garbage Collection settings specified in the config, but does not cancel them. Therefore, this call provides an additional hook to <strong>delay the deactivation beyond what is specified in the Activation Garbage Collection settings</strong>. This call can not be used to expedite Activation Garbage Collection.</p>
 <p>A positive <code>timeSpan</code> value means “prevent GC of this activation for that time span”.</p>
 <p>A negative <code>timeSpan</code> value means “cancel the previous setting of the <code>DelayDeactivation</code> call and make this activation behave based on the regular Activation Garbage Collection settings”.</p>
 <p><strong>Scenarios:</strong></p>
@@ -113,11 +112,9 @@ Therefore, this call provides an additional hook to <strong>delay the deactivati
 <h3 id="expediting-activation-gc">Expediting Activation GC</h3>
 <p>A grain activation can also instruct the runtime to deactivate it next time it becomes idle by calling <code>this.DeactivateOnIdle()</code> method:</p>
 <pre><code class="lang-csharp">protected void DeactivateOnIdle()
-</code></pre><p>A grain activation is considered idle if it is not processing any message at the moment.
-If you call <code>DeactivateOnIdle</code> while a grain is processing a message, it will get deactivated as soon as processing of the current message is finished.</p>
+</code></pre><p>A grain activation is considered idle if it is not processing any message at the moment. If you call <code>DeactivateOnIdle</code> while a grain is processing a message, it will get deactivated as soon as processing of the current message is finished.</p>
 <p>If there are any requests queued for the grain, they will be forwarded to the next activation.</p>
-<p><code>DeactivateOnIdle</code> take priority over any Activation Garbage Collection settings specified in the config or <code>DelayDeactivation</code>.
-Note that this setting only applies to the grain activation from which it has been called and it does not apply to other grain activation of this type.</p>
+<p><code>DeactivateOnIdle</code> take priority over any Activation Garbage Collection settings specified in the config or <code>DelayDeactivation</code>. Note that this setting only applies to the grain activation from which it has been called and it does not apply to other grain activation of this type.</p>
 <h2 id="configuration">Configuration</h2>
 <p>Grain garbage collection can be configured using the <code>GrainCollectionOptions</code> options:</p>
 <pre><code class="lang-csharp">mySiloHostBuilder.Configure&lt;GrainCollectionOptions&gt;(options =&gt;

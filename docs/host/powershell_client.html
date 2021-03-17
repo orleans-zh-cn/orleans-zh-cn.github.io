@@ -77,9 +77,7 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="powershell-client-module">PowerShell Client Module</h1>
 
-<p>The Orleans PowerShell Client Module is a set of <a href="https://technet.microsoft.com/en-us/library/dd772285.aspx">PowerShell Cmdlets</a> that wraps
-<a href="https://github.com/dotnet/orleans/blob/master/src/Orleans/Core/GrainClient.cs">GrainClient</a> in a set of convenient commands making possible to interact with not just
-<a href="https://github.com/dotnet/orleans/blob/master/src/Orleans.Runtime/Core/ManagementGrain.cs">ManagementGrain</a> but any <code>IGrain</code> just as a regular Orleans application can by using Powershell scripts.</p>
+<p>The Orleans PowerShell Client Module is a set of <a href="https://technet.microsoft.com/en-us/library/dd772285.aspx">PowerShell Cmdlets</a> that wraps <a href="https://github.com/dotnet/orleans/blob/master/src/Orleans/Core/GrainClient.cs">GrainClient</a> in a set of convenient commands making possible to interact with not just <a href="https://github.com/dotnet/orleans/blob/master/src/Orleans.Runtime/Core/ManagementGrain.cs">ManagementGrain</a> but any <code>IGrain</code> just as a regular Orleans application can by using Powershell scripts.</p>
 <p>These Cmdlets enable a series of scenarios from start maintenance tasks, tests, monitoring or any other kind of automation by leveraging Powershell scripts.</p>
 <p>Here is how to use it:</p>
 <h2 id="installing-the-module">Installing the module</h2>
@@ -106,9 +104,7 @@
 <h2 id="using-the-module">Using the module</h2>
 <p>Regardless of the way you decide to install it, the first thing you need to do in order to actually use it is import the module on the current PowerShell session so the Cmdlets get available by running this:</p>
 <pre><code class="lang-powershell">PS&gt; Import-Module OrleansPSUtils
-</code></pre><p><strong>Note</strong>:
-In case of building from source, you must import it as suggested on the Install section by using the path to the <code>.psd1</code> instead of using the module name since it will not be on the <code>$env:PSModulePath</code> PowerShell runtime variable.
-Again, it is highly recommended that you install from PowerShell Gallery instead.</p>
+</code></pre><p><strong>Note</strong>: In case of building from source, you must import it as suggested on the Install section by using the path to the <code>.psd1</code> instead of using the module name since it will not be on the <code>$env:PSModulePath</code> PowerShell runtime variable. Again, it is highly recommended that you install from PowerShell Gallery instead.</p>
 <p>After the module is imported (which means it is loaded on PowerShell session), you will have the following Cmdlets available:</p>
 <ul>
 <li><code>Start-GrainClient</code></li>
@@ -117,7 +113,7 @@ Again, it is highly recommended that you install from PowerShell Gallery instead
 </ul>
 <h4 id="start-grainclient">Start-GrainClient</h4>
 <p>This module is a wrapper around <code>GrainClient.Initialize()</code> and its overloads.</p>
-<p><strong>Usage</strong>:     </p>
+<p><strong>Usage</strong>:</p>
 <ul>
 <li><p><strong><code>Start-GrainClient</code></strong></p>
 <ul>
@@ -145,8 +141,7 @@ Again, it is highly recommended that you install from PowerShell Gallery instead
 </ul>
 </li>
 </ul>
-<p><strong>Note</strong>:
-The <code>Timeout</code> parameter is optional and if it is informed and greater than <code>System.TimeSpan.Zero</code>, it will call <code>Orleans.GrainClient.SetResponseTimeout(Timeout)</code> internally.</p>
+<p><strong>Note</strong>: The <code>Timeout</code> parameter is optional and if it is informed and greater than <code>System.TimeSpan.Zero</code>, it will call <code>Orleans.GrainClient.SetResponseTimeout(Timeout)</code> internally.</p>
 <h4 id="stop-grainclient">Stop-GrainClient</h4>
 <p>Takes no parameters and when called, if the <code>GrainClient</code> is initialized will gracefuly uninitialize.</p>
 <h4 id="get-grain">Get-Grain</h4>
@@ -166,8 +161,7 @@ PS&gt; $message = $grain.SayHelloTo(&quot;Gutemberg&quot;).Result
 PS&gt; Write-Output $message
 Hello Gutemberg!
 PS&gt; Stop-GrainClient
-</code></pre><p>We plan to update this page as we introduce more Cmdlets like use Observers, Streams and other Orleans core features more natively on Powershell.
-We hope that this help people as a starting point for automation. As always, this is a work-in-progress and we love contributions! :)</p>
+</code></pre><p>We plan to update this page as we introduce more Cmdlets like use Observers, Streams and other Orleans core features more natively on Powershell. We hope that this help people as a starting point for automation. As always, this is a work-in-progress and we love contributions! :)</p>
 <p>Please note that the intent is not to reimplement the whole client on PowerShell but instead, give IT and DevOps teams a way to interact with the Grains without need to implement a .Net application.</p>
 </article>
           </div>

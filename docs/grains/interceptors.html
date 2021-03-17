@@ -77,26 +77,26 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="grain-call-filters">Grain Call Filters</h1>
 
-<p>Grain call filters provide a means for intercepting grain calls. Filters can execute code both before and after a grain call. Multiple filters can be installed simultaneously. Filters are asynchronous and can modify <code>RequestContext</code>, arguments, and the return value of the method being invoked. Filters can also inspect the <code>MethodInfo</code> of the method being invoked on the grain class and can be used to throw or handle exceptions.</p>
-<p>Some example usages of grain call filters are:</p>
+<p>Grains调用过滤器提供了一种拦截Grains调用的方法。 筛选器可以在Grains调用之前和之后执行代码。 可以同时安装多个过滤器。 过滤器是异步的，可以修改<code>RequestContext</code>，参数和被调用方法的返回值。 过滤器还可以检查<code>方法信息</code>可以在Grain类上调用的方法，可用于引发或处理异常。</p>
+<p>Grain调用过滤器的一些示例用法是：</p>
 <ul>
-<li>Authorization: a filter can inspect the method being invoked and the arguments or some authorization information in the <code>RequestContext</code> to determine whether or not to allow the call to proceed.</li>
-<li>Logging/Telemetry: a filter can log information and capture timing data and other statistics about method invocation.</li>
-<li>Error Handling: a filter can intercept exceptions thrown by a method invocation and transform it into another exception or handle the exception as it passes through the filter.</li>
+<li>授权：过滤器可以检查正在调用的方法以及其中的参数或某些授权信息<code>RequestContext</code>确定是否允许呼叫继续进行。</li>
+<li>记录/遥测：过滤器可以记录信息并捕获计时数据和有关方法调用的其他统计信息。</li>
+<li>错误处理：过滤器可以拦截方法调用引发的异常，并将其转换为另一个异常，或者在通过过滤器时处理该异常。</li>
 </ul>
-<p>Filters come in two flavors:</p>
+<p>过滤器有两种口味：</p>
 <ul>
-<li>Incoming call filters</li>
-<li>Outgoing call filters</li>
+<li>访问过滤</li>
+<li>呼出调用过滤器</li>
 </ul>
-<p>Incoming call filters are executed when receiving a call. Outgoing call filters are executed when making a call.</p>
-<h1 id="incoming-call-filters">Incoming Call Filters</h1>
-<p>Incoming grain call filters implement the <code>IIncomingGrainCallFilter</code> interface, which has one method:</p>
+<p>收到呼叫时，将执行传入呼叫过滤器。 拨调用时执行呼出调用过滤器。</p>
+<h1 id="访问过滤">访问过滤</h1>
+<p>传入的Grain调用过滤器实现了<code>IIncomingGrainCallFilter</code>接口，它具有一种方法：</p>
 <pre><code class="lang-csharp">public interface IIncomingGrainCallFilter
 {
     Task Invoke(IIncomingGrainCallContext context);
 }
-</code></pre><p>The <code>IIncomingGrainCallContext</code> argument passed to the <code>Invoke</code> method has the following shape:</p>
+</code></pre><p>的<code>IIncomingGrainCallContext</code>参数传递给<code>Invoke</code>方法具有以下形状：</p>
 <pre><code class="lang-csharp">public interface IIncomingGrainCallContext
 {
     /// &lt;summary&gt;
@@ -129,11 +129,61 @@
     /// &lt;/summary&gt;
     object Result { get; set; }
 }
-</code></pre><p>The <code>IIncomingGrainCallFilter.Invoke(IIncomingGrainCallContext)</code> method must await or return the result of <code>IIncomingGrainCallContext.Invoke()</code> to execute the next configured filter and eventually the grain method itself. The <code>Result</code> property can be modified after awaiting the <code>Invoke()</code> method. The <code>ImplementationMethod</code> property returns the <code>MethodInfo</code> of the implementation class. The <code>MethodInfo</code> of the interface method can be accessed using the <code>InterfaceMethod</code> property. Grain call filters are called for all method calls to a grain and this includes calls to grain extensions (implementations of <code>IGrainExtension</code>) which are installed in the grain. For example, grain extensions are used to implement Streams and Cancellation Tokens. Therefore, it should be expected that the value of <code>ImplementationMethod</code> is not always a method in the grain class itself.</p>
-<h2 id="configuring-incoming-grain-call-filters">Configuring Incoming Grain Call Filters</h2>
-<p>Implementations of <code>IIncomingGrainCallFilter</code> can either be registered as silo-wide filters via Dependency Injection or they can be registered as grain-level filters via a grain implementing <code>IIncomingGrainCallFilter</code> directly.</p>
-<h3 id="silo-wide-grain-call-filters">Silo-wide Grain Call Filters</h3>
-<p>A delegate can be registered as a silo-wide grain call filters using Dependency Injection like so:</p>
+    public interface IOutgoingGrainCallContext
+{
+    /// &lt;summary&gt;
+    /// Gets the grain being invoked.
+    /// &lt;/summary&gt;
+    IAddressable Grain { get; }
+
+    /// &lt;summary&gt;
+    /// Gets the &lt;see cref=&quot;MethodInfo&quot;/&gt; for the interface method being invoked.
+    /// &lt;/summary&gt;
+    MethodInfo InterfaceMethod { get; }
+
+    /// &lt;summary&gt;
+    /// Gets the arguments for this method invocation.
+    /// &lt;/summary&gt;
+    object[] Arguments { get; }
+
+    /// &lt;summary&gt;
+    /// Invokes the request.
+    /// &lt;/summary&gt;
+    Task Invoke();
+
+    /// &lt;summary&gt;
+    /// Gets or sets the result.
+    /// &lt;/summary&gt;
+    object Result { get; set; }
+}
+    /// &lt;/summary&gt;
+    MethodInfo InterfaceMethod { get; }
+
+    /// &lt;summary&gt;
+    /// Gets the &lt;see cref=&quot;MethodInfo&quot;/&gt; for the implementation method being invoked.
+    /// &lt;/summary&gt;
+    MethodInfo ImplementationMethod { get; }
+
+    /// &lt;summary&gt;
+    /// Gets the arguments for this method invocation.
+    /// &lt;/summary&gt;
+    object[] Arguments { get; }
+
+    /// &lt;summary&gt;
+    /// Invokes the request.
+    /// &lt;/summary&gt;
+    Task Invoke();
+
+    /// &lt;summary&gt;
+    /// Gets or sets the result.
+    /// &lt;/summary&gt;
+    object Result { get; set; }
+}
+</code></pre><p>的<code>IIncomingGrainCallFilter.Invoke(IIncomingGrainCallContext)</code>方法必须等待或返回的结果<code>IIncomingGrainCallContext.Invoke()</code>执行下一个配置的过滤器，最终执行grain方法本身。 的<code>Result</code>可以在等待<code>Invoke()</code>方法。 <code>ImplementationMethod</code>属性返回<code>MethodInfo</code>实现类。 获取<code>MethodInfo</code>可以使用<code>InterfaceMethod</code>属性。 对于所有对Grains的方法调用，都会调用Grains调用过滤器，其中包括对Grains扩展的调用(<code>IGrain扩展</code>)安装在Grains中。 例如，grains扩展用于实现流和取消令牌。 因此，应该期望<code>ImplementationMethod</code>在Grains类本身中并不总是一种方法。</p>
+<h2 id="配置传入呼叫过滤器">配置传入呼叫过滤器</h2>
+<p>的实现<code>IIncomingGrainCallFilter</code>可以通过Dependency Injection注册为silos级过滤器，也可以通过Grains实现将其注册为grains级过滤器<code>IIncomingGrainCallFilter</code>直。</p>
+<h3 id="silos范围内的所有访问过滤器">silos范围内的所有访问过滤器</h3>
+<p>可以使用Dependency Injection将委托注册为silos级的Grain调用过滤器，如下所示：</p>
 <pre><code class="lang-csharp">siloHostBuilder.AddIncomingGrainCallFilter(async context =&gt;
 {
     // If the method being called is &#39;MyInterceptedMethod&#39;, then set a value
@@ -148,8 +198,17 @@
     // If the grain method returned an int, set the result to double that value.
     if (context.Result is int resultValue) context.Result = resultValue * 2;
 });
-</code></pre><p>Similarly, a class can be registered as a grain call filter using the <code>AddIncomingGrainCallFilter</code> helper method.
-Here is an example of a grain call filter which logs the results of every grain method:</p>
+    if (string.Equals(context.InterfaceMethod.Name, nameof(IMyGrain.MyInterceptedMethod)))
+    {
+        RequestContext.Set(&quot;intercepted value&quot;, &quot;this value was added by the filter&quot;);
+    }
+
+    await context.Invoke();
+
+    // If the grain method returned an int, set the result to double that value.
+    if (context.Result is int resultValue) context.Result = resultValue * 2;
+});
+</code></pre><p>同样，可以使用<code>AddIncomingGrainCallFilter</code>辅助方法。 这是一个grain调用过滤器的示例，它记录每个grain方法的结果：</p>
 <pre><code class="lang-csharp">public class LoggingCallFilter : IIncomingGrainCallFilter
 {
     private readonly Logger log;
@@ -188,13 +247,17 @@ Here is an example of a grain call filter which logs the results of every grain 
         }
     }
 }
-</code></pre><p>This filter can then be registered using the <code>AddIncomingGrainCallFilter</code> extension method:</p>
+            throw;
+        }
+    }
+}
+</code></pre><p>然后可以使用<code>AddIncomingGrainCallFilter</code>扩展方法：</p>
 <pre><code class="lang-csharp">siloHostBuilder.AddIncomingGrainCallFilter&lt;LoggingCallFilter&gt;();
-</code></pre><p>Alternatively, the filter can be registered without the extension method:</p>
+</code></pre><p>或者，可以在不使用扩展方法的情况下注册过滤器：</p>
 <pre><code class="lang-csharp">siloHostBuilder.ConfigureServices(
     services =&gt; services.AddSingleton&lt;IIncomingGrainCallFilter, LoggingCallFilter&gt;());
-</code></pre><h3 id="per-grain-grain-call-filters">Per-grain Grain Call Filters</h3>
-<p>A grain class can register itself as a grain call filter and filter any calls made to it by implementing <code>IIncomingGrainCallFilter</code> like so:</p>
+</code></pre><h3 id="每粒grains调用过滤器">每粒Grains调用过滤器</h3>
+<p>Grains类可以将自己注册为Grains调用过滤器，并可以通过实现对它的所有调用进行过滤<code>IIncomingGrainCallFilter</code>像这样：</p>
 <pre><code class="lang-csharp">public class MyFilteredGrain : Grain, IMyFilteredGrain, IIncomingGrainCallFilter
 {
     public async Task Invoke(IIncomingGrainCallContext context)
@@ -210,8 +273,16 @@ Here is an example of a grain call filter which logs the results of every grain 
 
     public Task&lt;int&gt; GetFavoriteNumber() =&gt; Task.FromResult(7);
 }
-</code></pre><p>In the above example, all calls to the <code>GetFavoriteNumber</code> method will return <code>38</code> instead of <code>7</code>, because the return value has been altered by the filter.</p>
-<p>Another use case for filters is in access control, as in this example:</p>
+        if (string.Equals(context.InterfaceMethod.Name, nameof(this.GetFavoriteNumber)))
+        {
+            context.Result = 38;
+        }
+    }
+
+    public Task&lt;int&gt; GetFavoriteNumber() =&gt; Task.FromResult(7);
+}
+</code></pre><p>在上面的示例中，对<code>GetFavoriteNumber</code>方法将返回<code>38</code>代替<code>7</code>，因为返回值已被过滤器更改。</p>
+<p>过滤器的另一个用例是在访问控制中，如以下示例所示：</p>
 <pre><code class="lang-csharp">[AttributeUsage(AttributeTargets.Method)]
 public class AdminOnlyAttribute : Attribute { }
 
@@ -232,23 +303,35 @@ public class MyAccessControlledGrain : Grain, IMyFilteredGrain, IIncomingGrainCa
     [AdminOnly]
     public Task&lt;int&gt; SpecialAdminOnlyOperation() =&gt; Task.FromResult(7);
 }
-</code></pre><p>In the above example, the <code>SpecialAdminOnlyOperation</code> method can only be called if <code>&quot;isAdmin&quot;</code> is set to <code>true</code> in the <code>RequestContext</code>. In this way, grain call filters can be used for authorization. In this example, it is the responsibility of the caller to ensure that the <code>&quot;isAdmin&quot;</code> value is set correctly and that authentication is performed correctly. Note that the <code>[AdminOnly]</code> attribute is specified on the grain class method. This is because the <code>ImplementationMethod</code> property returns the <code>MethodInfo</code> of the implementation, not the interface. The filter could also check the <code>InterfaceMethod</code> property.</p>
-<h2 id="ordering-of-grain-call-filters">Ordering of Grain Call Filters</h2>
-<p>Grain call filters follow a defined ordering:</p>
+        var isAdminMethod = context.ImplementationMethod.GetCustomAttribute&lt;AdminOnlyAttribute&gt;();
+        if (isAdminMethod &amp;&amp; !(bool) RequestContext.Get(&quot;isAdmin&quot;))
+        {
+            throw new AccessDeniedException($&quot;Only admins can access {context.ImplementationMethod.Name}!&quot;);
+        }
+
+        return context.Invoke();
+    }
+
+    [AdminOnly]
+    public Task&lt;int&gt; SpecialAdminOnlyOperation() =&gt; Task.FromResult(7);
+}
+</code></pre><p>在以上示例中，<code>SpecialAdminOnlyOperation</code>该方法只能在以下情况下调用<code>“ isAdmin”</code>设定为<code>真正</code>在里面<code>RequestContext</code>。 这样，可以将Grains调用过滤器用于授权。 在此示例中，呼叫者有责任确保<code>“ isAdmin”</code>值设置正确，并且验证正确执行。 请注意<code>[仅管理员]</code>属性是在Grains类方法上指定的。 这是因为<code>实现方法</code>属性返回<code>方法信息</code>的实现，而不是接口。 过滤器还可以检查<code>接口方法</code>属性。</p>
+<h2 id="grains呼叫过滤器的订购">grains呼叫过滤器的订购</h2>
+<p>Grains调用过滤器遵循定义的顺序：</p>
 <ol>
-<li><code>IIncomingGrainCallFilter</code> implementations configured in the dependency injection container, in the order in which they are registered.</li>
-<li>Grain-level filter, if the grain implements <code>IIncomingGrainCallFilter</code>.</li>
-<li>Grain method implementation or grain extension method implementation.</li>
+<li><code>IIncomingGrainCallFilter</code>在依赖项注入容器中配置的实现(按注册顺序)。</li>
+<li>Grains级过滤器(如果使用Grains)<code>IIncomingGrainCallFilter</code>。</li>
+<li>grain方法实施或grain扩展方法实施。</li>
 </ol>
-<p>Each call to <code>IIncomingGrainCallContext.Invoke()</code> encapsulates the next defined filter so that each filter has a chance to execute code before and after the next filter in the chain and eventually the grain method itself.</p>
-<h1 id="outgoing-call-filters">Outgoing Call Filters</h1>
-<p>Outgoing grain call filters are similar to incoming grain call filters with the major difference being that they are invoked on the caller (client) rather than the callee (grain).</p>
-<p>Outgoing grain call filters implement the <code>IOutgoingGrainCallFilter</code> interface, which has one method:</p>
+<p>每次调用<code>IIncomingGrainCallContext.Invoke()</code>封装下一个定义的过滤器，以便每个过滤器都有机会在链中下一个过滤器之前和之后执行代码，并最终执行grain方法本身。</p>
+<h1 id="呼出调用过滤器">呼出调用过滤器</h1>
+<p>传出Grains调用过滤器类似于传入Grains调用过滤器，主要区别在于它们是在调用者(客户端)而不是被调用者(grains)上调用的。</p>
+<p>传出呼叫过滤器实现了<code>IOutgoingGrainCallFilter</code>接口，它具有一种方法：</p>
 <pre><code class="lang-csharp">public interface IOutgoingGrainCallFilter
 {
     Task Invoke(IOutgoingGrainCallContext context);
 }
-</code></pre><p>The <code>IOutgoingGrainCallContext</code> argument passed to the <code>Invoke</code> method has the following shape:</p>
+</code></pre><p>的<code>IOutgoingGrainCallContext</code>参数传递给<code>Invoke</code>方法具有以下形状：</p>
 <pre><code class="lang-csharp">public interface IOutgoingGrainCallContext
 {
     /// &lt;summary&gt;
@@ -276,10 +359,10 @@ public class MyAccessControlledGrain : Grain, IMyFilteredGrain, IIncomingGrainCa
     /// &lt;/summary&gt;
     object Result { get; set; }
 }
-</code></pre><p>The <code>IOutgoingGrainCallFilter.Invoke(IOutgoingGrainCallContext)</code> method must await or return the result of <code>IOutgoingGrainCallContext.Invoke()</code> to execute the next configured filter and eventually the grain method itself. The <code>Result</code> property can be modified after awaiting the <code>Invoke()</code> method. The <code>MethodInfo</code> of the interface method being called can be accessed using the <code>InterfaceMethod</code> property. Outgoing grain call filters are invoked for all method calls to a grain and this includes calls to system methods made by Orleans.</p>
-<h2 id="configuring-outgoing-grain-call-filters">Configuring Outgoing Grain Call Filters</h2>
-<p>Implementations of <code>IOutgoingGrainCallFilter</code> can either be registered on both silos and clients using Dependency Injection.</p>
-<p>A delegate can be registered as a call filter like so:</p>
+</code></pre><p>的<code>IOutgoingGrainCallFilter.Invoke(IOutgoingGrainCallContext)</code>方法必须等待或返回的结果<code>IOutgoingGrainCallContext.Invoke()</code>执行下一个配置的过滤器，最终执行grain方法本身。 的<code>结果</code>可以在等待<code>调用()</code>方法。 的<code>方法信息</code>可以使用<code>接口方法</code>属性。 传出的Grains调用过滤器会针对所有对Grains的方法调用进行调用，其中包括对Orleans进行的系统方法的调用。</p>
+<h2 id="配置去电呼叫过滤器">配置去电呼叫过滤器</h2>
+<p>的实现<code>IOutgoingGrainCallFilter</code>可以使用依赖注入在silos和客户端上注册。</p>
+<p>可以将委托注册为呼叫过滤器，如下所示：</p>
 <pre><code class="lang-csharp">builder.AddOutgoingGrainCallFilter(async context =&gt;
 {
     // If the method being called is &#39;MyInterceptedMethod&#39;, then set a value
@@ -294,9 +377,18 @@ public class MyAccessControlledGrain : Grain, IMyFilteredGrain, IIncomingGrainCa
     // If the grain method returned an int, set the result to double that value.
     if (context.Result is int resultValue) context.Result = resultValue * 2;
 });
-</code></pre><p>In the above code, <code>builder</code> may be either an instance of <code>ISiloHostBuilder</code> or <code>IClientBuilder</code>.</p>
-<p>Similarly, a class can be registered as an outgoing grain call filter.
-Here is an example of a grain call filter which logs the results of every grain method:</p>
+    if (string.Equals(context.InterfaceMethod.Name, nameof(IMyGrain.MyInterceptedMethod)))
+    {
+        RequestContext.Set(&quot;intercepted value&quot;, &quot;this value was added by the filter&quot;);
+    }
+
+    await context.Invoke();
+
+    // If the grain method returned an int, set the result to double that value.
+    if (context.Result is int resultValue) context.Result = resultValue * 2;
+});
+</code></pre><p>在上面的代码中，<code>建造者</code>可能是<code>ISiloHostBuilder</code>要么<code>IClientBuilder</code>。</p>
+<p>同样，可以将一个类注册为传出的Grain调用过滤器。 这是一个grain调用过滤器的示例，它记录每个grain方法的结果：</p>
 <pre><code class="lang-csharp">public class LoggingCallFilter : IOutgoingGrainCallFilter
 {
     private readonly Logger log;
@@ -335,21 +427,25 @@ Here is an example of a grain call filter which logs the results of every grain 
         }
     }
 }
-</code></pre><p>This filter can then be registered using the <code>AddOutgoingGrainCallFilter</code> extension method:</p>
+            throw;
+        }
+    }
+}
+</code></pre><p>然后可以使用<code>AddOutgoingGrainCallFilter</code>扩展方法：</p>
 <pre><code class="lang-csharp">builder.AddOutgoingGrainCallFilter&lt;LoggingCallFilter&gt;();
-</code></pre><p>Alternatively, the filter can be registered without the extension method:</p>
+</code></pre><p>或者，可以在不使用扩展方法的情况下注册过滤器：</p>
 <pre><code class="lang-csharp">builder.ConfigureServices(
     services =&gt; services.AddSingleton&lt;IOutgoingGrainCallFilter, LoggingCallFilter&gt;());
-</code></pre><p>As with the delegate call filter example, <code>builder</code> may be an instance of either <code>ISiloHostBuiler</code> or <code>IClientBuilder</code>.</p>
-<h2 id="use-cases">Use Cases</h2>
-<h3 id="exception-conversion">Exception Conversion</h3>
-<p>When an exception which has been thrown from the server is getting deserialized on the client, you may sometimes get the following exception instead of the actual one: <code>TypeLoadException: Could not find Whatever.dll.</code></p>
-<p>This happens if the assembly containing the exception is not available to the client. For example, say you are using Entity Framework in your grain implementations; then it is possible that an <code>EntityException</code> is thrown. The client on the other hand does not (and should not) reference <code>EntityFramework.dll</code> since it has no knowledge about the underlying data access layer.</p>
-<p>When the client tries to deserialize the <code>EntityException</code>, it will fail due to the missing DLL; as a consequence a <code>TypeLoadException</code> is thrown hiding the original <code>EntityException</code>.</p>
-<p>One may argue that this is pretty okay, since the client would never handle the <code>EntityException</code>; otherwise it would have to reference <code>EntityFramework.dll</code>.</p>
-<p>But what if the client wants at least to log the exception? The problem is that the original error message is lost. One way to workaround this issue is to intercept server-side exceptions and replace them by plain exceptions of type <code>Exception</code> if the exception type is presumably unknown on the client side.</p>
-<p>However, there is one important thing we have to keep in mind: we only want to replace an exception <strong>if the caller is the grain client</strong>. We don&#39;t want to replace an exception if the caller is another grain (or the Orleans infrastructure which is making grain calls, too; e.g. on the <code>GrainBasedReminderTable</code> grain).</p>
-<p>On the server side this can be done with a silo-level interceptor:</p>
+</code></pre><p>与委托调用过滤器示例一样，<code>建造者</code>可能是以下任何一个的实例<code>ISiloHostBuiler</code>要么<code>IClientBuilder</code>。</p>
+<h2 id="用例">用例</h2>
+<h3 id="异常转换">异常转换</h3>
+<p>当从服务器引发的异常在客户端上反序列化时，有时可能会收到以下异常，而不是实际的异常：<code>TypeLoadException：找不到Whatever.dll。</code></p>
+<p>如果包含异常的程序集对客户端不可用，则会发生这种情况。 例如，假设您在grain实现中使用实体框架；那么有可能<code>EntityException</code>被抛出。 另一方面，客户端不(也不应该)引用<code>EntityFramework.dll</code>因为它不了解基础数据访问层。</p>
+<p>当客户端尝试反序列化<code>EntityException</code>，它将因缺少DLL而失败；结果是<code>TypeLoadException类型加载异常</code>把原来的东西藏起来了<code>实体异常</code>.</p>
+<p>有人可能会说这很好，因为客户永远不会处理<code>实体异常</code>否则就得参考<code>EntityFramework.dll</code>.</p>
+<p>但是如果客户端希望至少记录异常呢？ 问题是原来的错误消息丢失了。 解决此问题的一种方法是截获服务器端异常并用类型的纯异常替换它们<code>例外</code>如果异常类型可能在客户端未知。</p>
+<p>然而，有一件重要的事我们必须牢记：我们只想替换一个例外<strong>如果调用者是Grains客户</strong>. 如果调用者是另一个grain(或者正在进行grain调用的Orleans基础设施；例如<code>GrainBasedReminderTable</code>Grains)。 We don&#39;t want to replace an exception if the caller is another grain (or the Orleans infrastructure which is making grain calls, too; e.g. on the <code>GrainBasedReminderTable</code> grain).</p>
+<p>在服务器端，这可以通过silos级别的拦截器来实现：</p>
 <pre><code class="lang-csharp">public class ExceptionConversionFilter : IIncomingGrainCallFilter
 {
     private static readonly HashSet&lt;string&gt; KnownExceptionTypeAssemblyNames =
@@ -411,18 +507,51 @@ Here is an example of a grain call filter which logs the results of every grain 
                     Environment.NewLine));
         }
     }
+} == true;
+        if (!isConversionEnabled)
+        {
+            // If exception conversion is not enabled, execute the call without interference.
+            await context.Invoke();
+            return;
+        }
+
+        RequestContext.Remove(&quot;IsExceptionConversionEnabled&quot;);
+        try
+        {
+            await context.Invoke();
+        }
+        catch (Exception exc)
+        {
+            var type = exc.GetType();
+
+            if (KnownExceptionTypeAssemblyNames.Contains(type.Assembly.GetName().Name))
+            {
+                throw;
+            }
+
+            // Throw a base exception containing some exception details.
+            throw new Exception(
+                string.Format(
+                    &quot;Exception of non-public type &#39;{0}&#39; has been wrapped.&quot;
+                    + &quot; Original message: &lt;&lt;&lt;&lt;----{1}{2}{3}----&gt;&gt;&gt;&gt;&quot;,
+                    type.FullName,
+                    Environment.NewLine,
+                    exc,
+                    Environment.NewLine));
+        }
+    }
 }
-</code></pre><p>This filter can then be registered on the silo:</p>
+</code></pre><p>然后可以在silos上注册此筛选器：</p>
 <pre><code class="lang-csharp">siloHostBuilder.AddIncomingGrainCallFilter&lt;ExceptionConversionFilter&gt;();
-</code></pre><p>Enable the filter for calls made by the client by adding an outgoing call filter:</p>
+</code></pre><p>通过添加传出呼叫筛选器，为客户端发出的呼叫启用筛选器：</p>
 <pre><code class="lang-csharp">clientBuilder.AddOutgoingGrainCallFilter(context =&gt;
 {
     RequestContext.Set(&quot;IsExceptionConversionEnabled&quot;, true);
     return context.Invoke();
 });
-</code></pre><p>This way the client tells the server that it wants to use exception conversion.</p>
-<h3 id="calling-grains-from-interceptors">Calling Grains from Interceptors</h3>
-<p>It is possible to make grain calls from an interceptor by injecting <code>IGrainFactory</code> into the interceptor class:</p>
+</code></pre><p>这样，客户端就告诉服务器它要使用异常转换。</p>
+<h3 id="从拦截器呼叫grains">从拦截器呼叫Grains</h3>
+<p>通过注入，可以从拦截器发出grain调用<code>IGR工厂</code>进入拦截器类：</p>
 <pre><code class="lang-csharp">private readonly IGrainFactory grainFactory;
 
 public CustomCallFilter(IGrainFactory grainFactory)
@@ -433,6 +562,18 @@ public CustomCallFilter(IGrainFactory grainFactory)
 public async Task Invoke(IIncomingGrainCallContext context)
 {
   // Hook calls to any grain other than ICustomFilterGrain implementations.
+  // This avoids potential infinite recursion when calling OnReceivedCall() below.
+  if (!(context.Grain is ICustomFilterGrain))
+  {
+    var filterGrain = this.grainFactory.GetGrain&lt;ICustomFilterGrain&gt;(context.Grain.GetPrimaryKeyLong());
+
+    // Perform some grain call here.
+    await filterGrain.OnReceivedCall();
+  }
+
+  // Continue invoking the call on the target grain.
+  await context.Invoke();
+}
   // This avoids potential infinite recursion when calling OnReceivedCall() below.
   if (!(context.Grain is ICustomFilterGrain))
   {

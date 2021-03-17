@@ -80,8 +80,7 @@
 <p>For a working sample application that targets Orleans 3.0 see: <a href="https://github.com/dotnet/orleans/tree/master/Samples/3.0/HelloWorld">https://github.com/dotnet/orleans/tree/master/Samples/3.0/HelloWorld</a>. The sample hosts the client and the silo in .NET Core console applications that work in different platforms, while the grains and interfaces target .NET Standard 2.0.</p>
 <p>For older versions of Orleans please see their respective Sample projects: <a href="https://github.com/dotnet/orleans/tree/master/Samples/">https://github.com/dotnet/orleans/tree/master/Samples/</a>.</p>
 <h2 id="silo-configuration">Silo configuration</h2>
-<p>For local development, please refer to the below example of how to configure a silo for that case.
-It configures and starts a silo listening on <code>loopback</code> address and 11111 and 30000 as silo and gateway ports respectively.</p>
+<p>For local development, please refer to the below example of how to configure a silo for that case. It configures and starts a silo listening on <code>loopback</code> address and 11111 and 30000 as silo and gateway ports respectively.</p>
 <p>Add the <code>Microsoft.Orleans.Server</code> NuGet meta-package to the project. After you get comfortable with the API, you can pick and choose which exact packages included in <code>Microsoft.Orleans.Server</code> you actually need, and reference them instead.</p>
 <pre><code class="lang-PowerShell">PM&gt; Install-Package Microsoft.Orleans.Server
 </code></pre><p>You need to configure <code>ClusterOptions</code> via <code>ISiloBuilder.Configure</code> method, specify that you want <code>DevelopmentClustering</code> as your clustering choice with this silo being the primary, and then configure silo endpoints.</p>
@@ -132,10 +131,8 @@ It configures and starts a silo listening on <code>loopback</code> address and 1
     }
 }
 </code></pre><h2 id="client-configuration">Client configuration</h2>
-<p>For local development, please refer to the below example of how to configure a client for that case.
-It configures a client that would connect to a <code>loopback</code> silo.</p>
-<p>Add the <code>Microsoft.Orleans.Client</code> NuGet meta-package to the project.
-After you get comfortable with the API, you can pick and choose which exact packages included in <code>Microsoft.Orleans.Client</code> you actually need, and reference them instead.</p>
+<p>For local development, please refer to the below example of how to configure a client for that case. It configures a client that would connect to a <code>loopback</code> silo.</p>
+<p>Add the <code>Microsoft.Orleans.Client</code> NuGet meta-package to the project. After you get comfortable with the API, you can pick and choose which exact packages included in <code>Microsoft.Orleans.Client</code> you actually need, and reference them instead.</p>
 <pre><code class="lang-PowerShell">PM&gt; Install-Package Microsoft.Orleans.Client
 </code></pre><p>You need to configure <code>ClientBuilder</code> with a cluster ID that matches the one you specified for local silo and specify static clustering as your clustering choice pointing it to the gateway port of the silo</p>
 <p><code>ConfigureApplicationParts</code> call explicitly adds the assembly with grain interfaces to the application setup.</p>

@@ -77,15 +77,11 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="announcing-orleans-20-tech-preview-3">Announcing Orleans 2.0 Tech Preview 3</h1>
 
-<p><a href="https://github.com/jdom">Julian Dominguez</a>
-9/13/2017 1:17:21 PM</p>
+<p><a href="https://github.com/jdom">Julian Dominguez</a> 9/13/2017 1:17:21 PM</p>
 <hr>
-<p>We just released a big update on the Orleans 2.0 tech preview train.
-The new binaries now target .NET Standard 2.0, so they have almost full parity with the .NET version of Orleans.
-This means that the current state is not only functional for people writing new applications in .NET Core, but also as an upgrade path for people with applications already running in .NET Framework.</p>
+<p>We just released a big update on the Orleans 2.0 tech preview train. The new binaries now target .NET Standard 2.0, so they have almost full parity with the .NET version of Orleans. This means that the current state is not only functional for people writing new applications in .NET Core, but also as an upgrade path for people with applications already running in .NET Framework.</p>
 <h2 id="are-we-done-yet">Are we done yet?</h2>
-<p>This is an exciting milestone for our team, as it brings the 2.0 release a lot closer.
-There are a few remaining things we would like to do for this version before we release, such as:</p>
+<p>This is an exciting milestone for our team, as it brings the 2.0 release a lot closer. There are a few remaining things we would like to do for this version before we release, such as:</p>
 <ul>
 <li>Enable build-time codegen for .NET Core apps (only runtime codegen is supported for .NET Core still)</li>
 <li>Migrate to <a href="https://www.nuget.org/packages/Microsoft.Extensions.Logging/">Microsoft.Extensions.Logging</a> for all of our logging</li>
@@ -102,15 +98,9 @@ There are a few remaining things we would like to do for this version before we 
 <h2 id="please-help-us">Please help us</h2>
 <p>We plan to start releasing updated packages to the MyGet feed a lot more often, so please try the preview, and if there&#39;s issues, let us know, so that we can fix it and send an update your way shortly after.</p>
 <h2 id="is-orleans-20-tp3-production-ready">Is Orleans 2.0 TP3 production ready?</h2>
-<p>Not yet. 
-Big disclaimer: We do our CI testing in .NET (because our tests heavily rely on AppDomains to create an in-memory cluster of silos, and those are not supported in .NET Core, but we plan to tackle that soon).
-We have done some basic manual testing in .NET Core (both Windows and Linux), and we have some of our contributors using it to develop new services.
-Getting feedback (and PRs!) is one of the main goals of this release, and not to be used in production yet.
-Also, there is no guarantee that this technical preview is entirely backwards compatible with Orleans 1.5, even for the features that were fully ported.
-Once we are closer to a stable release, we’ll list all the breaking changes that we know of in case you are interested in upgrading your application from 1.X to 2.0.</p>
+<p>Not yet. Big disclaimer: We do our CI testing in .NET (because our tests heavily rely on AppDomains to create an in-memory cluster of silos, and those are not supported in .NET Core, but we plan to tackle that soon). We have done some basic manual testing in .NET Core (both Windows and Linux), and we have some of our contributors using it to develop new services. Getting feedback (and PRs!) is one of the main goals of this release, and not to be used in production yet. Also, there is no guarantee that this technical preview is entirely backwards compatible with Orleans 1.5, even for the features that were fully ported. Once we are closer to a stable release, we’ll list all the breaking changes that we know of in case you are interested in upgrading your application from 1.X to 2.0.</p>
 <h2 id="notes">Notes</h2>
-<p>If you were using an older tech preview, notice that assembly loading changed a little, and we expect to continue to change it.
-In the meantime, please note that in .NET Core you might be required to publish your app so that all the assemblies to scan are in the same folder (you can achieve this by calling `<em>dotnet publish</em>` on your silo host).</p>
+<p>If you were using an older tech preview, notice that assembly loading changed a little, and we expect to continue to change it. In the meantime, please note that in .NET Core you might be required to publish your app so that all the assemblies to scan are in the same folder (you can achieve this by calling `<em>dotnet publish</em>` on your silo host).</p>
 </article>
           </div>
           

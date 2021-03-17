@@ -78,12 +78,11 @@
 <h1 id="heterogeneous-silos">Heterogeneous silos</h1>
 
 <h2 id="overview">Overview</h2>
-<p>On a given cluster, silos can support a different set of grain types:
-<img src="../../images/heterogeneous.png" alt=""></p>
+<p>On a given cluster, silos can support a different set of grain types: <img src="../../images/heterogeneous.png" alt=""></p>
 <p>In this example the cluster supports grains of type <code>A</code>, <code>B</code>, <code>C</code>, <code>D</code>, <code>E</code>:</p>
 <ul>
-<li>Grain types<code>A</code>and<code>B</code>can be placed on Silo 1 and 2. </li>
-<li>Grain type<code>C</code>can be placed on Silo 1, 2 or 3. </li>
+<li>Grain types<code>A</code>and<code>B</code>can be placed on Silo 1 and 2.</li>
+<li>Grain type<code>C</code>can be placed on Silo 1, 2 or 3.</li>
 <li>Grain type<code>D</code>can be only placed on Silo 3</li>
 <li>Grain Type<code>E</code>can be only placed on Silo 4.</li>
 </ul>
@@ -102,8 +101,7 @@
    public Task SomeOtherMethod() { … }
 }
 </code></pre><h2 id="configuration">Configuration</h2>
-<p>No configuration is needed, you can deploy different binaries on each silo in your cluster.
-However, if necessary, you can change the interval that silos and clients check for changes in types supported with the property <code>TypeMapRefreshInterval</code> from <code>TypeManagementOptions</code></p>
+<p>No configuration is needed, you can deploy different binaries on each silo in your cluster. However, if necessary, you can change the interval that silos and clients check for changes in types supported with the property <code>TypeMapRefreshInterval</code> from <code>TypeManagementOptions</code></p>
 <p>For testing purposes, you can use the property <code>ExcludedGrainTypes</code> in <code>GrainClassOptions</code>, which is a list names of the types you want to exclude on the silos.</p>
 <h2 id="limitations">Limitations</h2>
 <ul>

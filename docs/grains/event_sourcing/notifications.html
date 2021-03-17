@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Notifications | Microsoft Orleans Documentation </title>
+    <title>&#36890;&#30693; | Microsoft Orleans Documentation </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Notifications | Microsoft Orleans Documentation ">
+    <meta name="title" content="&#36890;&#30693; | Microsoft Orleans Documentation ">
     <meta name="generator" content="docfx 2">
     
     <link rel="shortcut icon" href="../../../favicon.ico">
@@ -75,30 +75,29 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-<h1 id="notifications">Notifications</h1>
+<h1 id="通知">通知</h1>
 
-<p>It is often convenient to have the ability to react to state changes. 
-All callbacks are subject to Orleans&#39; turn-based guarantees; see also the section on Concurrency Guarantees.</p>
-<h2 id="tracking-confirmed-state">Tracking Confirmed State</h2>
-<p>To be notified of any changes to the confirmed state, <code>JournaledGrain</code> subclasses can override this method:</p>
+<p>有能力对状态变化作出反应通常是很方便的。 所有回调都受orleans的基于轮换的保证的约束；另请参见关于并发保证的一节。</p>
+<h2 id="跟踪确认状态">跟踪确认状态</h2>
+<p>如果确认状态发生任何变化，<code>日志记录</code>子类可以重写此方法：</p>
 <pre><code class="lang-csharp">protected override void OnStateChanged()
 {
    // read state and/or event log and take appropriate action
 }
-</code></pre><p><code>OnStateChanged</code> is called whenever the confirmed state is updated, i.e. the version number increases. This can happen when</p>
+</code></pre><p><code>状态已更改</code>每当确认的状态更新(即版本号增加)时调用。 这可能发生在</p>
 <ol>
-<li>A newer version of the state was loaded from storage. </li>
-<li>An event that was raised by this instance has been successfully written to storage.</li>
-<li>A notification message was received from some other instance.</li>
+<li>已从存储中加载状态的新版本。</li>
+<li>此实例引发的事件已成功写入存储。</li>
+<li>从其他实例接收到通知消息。</li>
 </ol>
-<p>Note that since all grains initially have version zero, until the initial load from storage completes, this means that <code>OnStateChanged</code> is called whenever the initial load completes with a version larger than zero.</p>
-<h2 id="tracking-tentative-state">Tracking Tentative State</h2>
-<p>To be notified of any changes to the tentative state, <code>JournaledGrain</code> subclasses can override this method:</p>
+<p>注意，由于所有的grains最初都有版本0，直到存储的初始加载完成，这意味着<code>状态已更改</code>在初始加载完成且版本大于零时调用。</p>
+<h2 id="跟踪暂定状态">跟踪暂定状态</h2>
+<p>如果临时状态有任何变化，<code>日志记录</code>子类可以重写此方法：</p>
 <pre><code class="lang-csharp">protected override void OnTentativeStateChanged()
 {
    // read state and/or events and take appropriate action
 }
-</code></pre><p><code>OnTentativeStateChanged</code> is called whenever the tentative state changes, i.e. if the combined sequence  (ConfirmedEvents + UnconfirmedEvents) changes. In particular, a callback to <code>OnTentativeStateChanged()</code> always happens during <code>RaiseEvent</code>.</p>
+</code></pre><p><code>ontentativestatechanged</code>当暂定状态改变时调用，即如果组合序列(confirmedEvents+confirmedEvents)改变。 特别是，回调<code>ontentativestatechanged()</code>总是发生在<code>葡萄干</code>.</p>
 </article>
           </div>
           

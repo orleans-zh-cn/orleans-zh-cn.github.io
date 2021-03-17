@@ -77,26 +77,21 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="grainservices">GrainServices</h1>
 
-<p>A GrainService is a special grain; one that has no identity, and runs in every silo from startup to shutdown.</p>
-<h2 id="creating-a-grainservice">Creating a GrainService</h2>
-<p><strong>Step 1.</strong> Create the interface.
-The interface of a GrainService is built using exactly the same principles you would use for building the interface of any other grain.</p>
+<p>GrainService是一种特殊的Grains。 一个没有身份的，并且从启动到关闭都在每个silos中运行的程序。</p>
+<h2 id="创建一个grainservice">创建一个GrainService</h2>
+<p>**第1步。 **创建接口。 GrainService的接口是使用与构建其他任何grain的接口完全相同的原理构建的。</p>
 <pre><code class="lang-csharp">public interface IDataService : IGrainService {
     Task MyMethod();
 }
-</code></pre><p><strong>Step 2.</strong> Create the DataService grain itself.
-If possible, make the GrainService reentrant for better performance.
-Note the necessary base constructor call.
-It’s good to know that you can also inject an <code>IGrainFactory</code> so you can make grain calls from your GrainService.</p>
-<p>A note about streams: a GrainService cannot write to Orleans streams because it doesn’t work within a grain task scheduler.
-If you need the GrainService to write to streams for you, then you will have to send the object to another kind of grain for writing to the stream.</p>
+</code></pre><p>**第2步。 **创建DataService本身。 如果可能，使GrainServiceReentrant以获得更好的性能。 注意必要的基本构造函数调用。 很高兴知道您也可以注入<code>IGrainFactory</code>因此您可以从GrainService进行Grains调用。</p>
+<p>关于流的说明：GrainService无法在Orleans流中写入，因为它在Grain Task Scheduler中不起作用。 如果您需要GrainService为您写入流，则必须将对象发送到另一种Grains以写入流。</p>
 <pre><code class="lang-csharp">[Reentrant]
 
-public class DataService : GrainService, IDataService {
+public class LightstreamerDataService : GrainService, IDataService {
 
     readonly IGrainFactory GrainFactory;
 
-    public DataService(IServiceProvider services, IGrainIdentity id, Silo silo, ILoggerFactory loggerFactory, IGrainFactory grainFactory) : base(id, silo, loggerFactory) {
+    public LightstreamerDataService(IServiceProvider services, IGrainIdentity id, Silo silo, ILoggerFactory loggerFactory, IGrainFactory grainFactory) : base(id, silo, loggerFactory) {
         GrainFactory = grainFactory;
     }
 
@@ -115,12 +110,10 @@ public class DataService : GrainService, IDataService {
     public Task MyMethod() {
  }
 }
-</code></pre><p><strong>Step 3.</strong> Create an interface for the GrainServiceClient to be used by other grains to connect to the GrainService.</p>
+</code></pre><p><strong>第三步</strong>为GrainServiceClient创建一个接口，供其他Grains使用以连接到GrainService。</p>
 <pre><code class="lang-csharp">public interface IDataServiceClient : IGrainServiceClient&lt;IDataService&gt;, IDataService {
 }
-</code></pre><p><strong>Step 4.</strong> Create the actual grain service client.
-It pretty much just acts as a proxy for the data service.
-Unfortunately, you have to manually type in all the method mappings, which are just simple one-liners.</p>
+</code></pre><p>**第4步。 **创建实际的Grains服务客户端。 它几乎只是充当数据服务的代理。 不幸的是，您必须手动输入所有方法映射，它们只是简单的一列式。</p>
 <pre><code class="lang-csharp">public class DataServiceClient : GrainServiceClient&lt;IDataService&gt;, IDataServiceClient {
 
     public DataServiceClient(IServiceProvider serviceProvider) : base(serviceProvider) {
@@ -128,9 +121,7 @@ Unfortunately, you have to manually type in all the method mappings, which are j
 
     public Task MyMethod()  =&gt; GrainService.MyMethod();
 }
-</code></pre><p><strong>Step 5.</strong> Inject the grain service client into the other grains that need it.
-Note that the GrainServiceClient does not guarantee accessing the GrainService on the local silo.
-Your command could potentially be sent to the GrainService on any silo in the cluster.</p>
+</code></pre><p><strong>第五步</strong>将Grains服务客户端注入需要它的其他Grains中。 注意，GrainServiceClient不保证访问本地silos上的GrainService。 您的命令可能会发送到集群中任何silos上的GrainService。</p>
 <pre><code class="lang-csharp">public class MyNormalGrain: Grain&lt;NormalGrainState&gt;, INormalGrain {
 
     readonly IDataServiceClient DataServiceClient;
@@ -139,21 +130,16 @@ Your command could potentially be sent to the GrainService on any silo in the cl
                 DataServiceClient = dataServiceClient;
     }
 }
-</code></pre><p><strong>Step 6.</strong> Inject the grain service into the silo itself.
-You need to do this so that the silo will start the GrainService.</p>
+</code></pre><p><strong>第六步</strong>将grain服务注入Silo本身。 您需要执行此操作，以便silos将启动GrainService。</p>
 <pre><code class="lang-csharp">(ISiloHostBuilder builder) =&gt; builder .ConfigureServices(services =&gt; { services.AddSingleton&lt;IDataService, DataService&gt;(); });
-</code></pre><h2 id="additional-notes">Additional Notes</h2>
-<h3 id="note-1">Note 1</h3>
-<p>There&#39;s an extension method on <code>ISiloHostBuilder: AddGrainService&lt;SomeGrainService&gt;()</code>.
-Type constraint is: <code>where T : GrainService</code>.
-It ends up calling this bit: <strong>orleans/src/Orleans.Runtime/Services/GrainServicesSiloBuilderExtensions.cs</strong></p>
-<p> <code>return services.AddSingleton&lt;IGrainService&gt;(sp =&gt; GrainServiceFactory(grainServiceType, sp));</code></p>
-<p>Basically, the silo fetches <code>IGrainService</code> types from the service provider when starting: <strong>orleans/src/Orleans.Runtime/Silo/Silo.cs</strong>
- <code>var grainServices = this.Services.GetServices&lt;IGrainService&gt;();</code></p>
-<p>The <code>Microsoft.Orleans.OrleansRuntime</code> Nuget package should be referenced by the Grainservice project.</p>
-<h3 id="note-2">Note 2</h3>
-<p>In order for this to work you have to register both the Service and its Client.
-The code looks something like this:</p>
+</code></pre><h2 id="补充笔记">补充笔记</h2>
+<h3 id="注1">###注1</h3>
+<p>有一个扩展方法<code>ISiloHostBuilder：AddGrainService &lt;SomeGrainService&gt;()</code>。 类型约束是：<code>其中T：GrainService</code>。 最终调用此位：<strong>orleans / src / Orleans.Runtime / Services / GrainServicesSiloBuilderExtensions.cs</strong></p>
+<p> <code>返回服务。 AddSingleton &lt;IGrainService&gt;(sp =&gt; GrainServiceFactory(grainServiceType，sp));</code></p>
+<p>Basically, the silo fetches <code>IGrainService</code> types from the service provider when starting: <strong>orleans/src/Orleans.Runtime/Silo/Silo.cs</strong> <code>var grainServices = this.Services.GetServices&lt;IGrainService&gt;();</code></p>
+<p>基本上，silos取<code>IGrain服务</code>启动时来自服务提供商的类型：<strong>orleans / src / Orleans.Runtime / Silo / Silo.cs</strong> <code>var grainServices = this.Services.GetServices &lt;IGrainService&gt;();</code></p>
+<h3 id="笔记2">＃＃＃笔记2</h3>
+<p>为了使其正常工作，您必须注册服务及其客户端。 代码看起来像这样：</p>
 <pre><code class="lang-csharp">  var builder = new SiloHostBuilder()
       .AddGrainService&lt;DataService&gt;()  // Register GrainService
       .ConfigureServices(s =&gt;

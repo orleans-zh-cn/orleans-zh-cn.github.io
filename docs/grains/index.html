@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Developing a Grain | Microsoft Orleans Documentation </title>
+    <title>Persistence | Microsoft Orleans Documentation </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Developing a Grain | Microsoft Orleans Documentation ">
+    <meta name="title" content="Persistence | Microsoft Orleans Documentation ">
     <meta name="generator" content="docfx 2">
     
     <link rel="shortcut icon" href="../../favicon.ico">
@@ -75,16 +75,12 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-<h1 id="setup">Setup</h1>
+<h1 id="持久化">持久化</h1>
 
-<p>Before you write code to implement a grain class, create a new Class Library project targeting .NET Standard or .Net Core (preferred) or .NET Framework 4.6.1 or higher (if you cannot use .NET Standard or .NET Core due to dependencies).
-Grain interfaces and grain classes can be defined in the same Class Library project, or in two different projects for better separation of interfaces from implementation.
-In either case, the projects need to reference <code>Microsoft.Orleans.Core.Abstractions</code> and <code>Microsoft.Orleans.CodeGenerator.MSBuild</code> NuGet packages.</p>
+<p>Before you write code to implement a grain class, create a new Class Library project targeting .NET Standard or .Net Core (preferred) or .NET Framework 4.6.1 or higher (if you cannot use .NET Standard or .NET Core due to dependencies). Grain interfaces and grain classes can be defined in the same Class Library project, or in two different projects for better separation of interfaces from implementation. In either case, the projects need to reference <code>Microsoft.Orleans.Core.Abstractions</code> and <code>Microsoft.Orleans.CodeGenerator.MSBuild</code> NuGet packages.</p>
 <p>For more thorough instructions, see the <a href="../tutorials_and_samples/tutorial_1.html#project-setup">Project Setup</a> section of <a href="../tutorials_and_samples/tutorial_1.html">Tutorial One – Orleans Basics</a>.</p>
 <h1 id="grain-interfaces-and-classes">Grain Interfaces and Classes</h1>
-<p>Grains interact with each other and get called from outside by invoking methods declared as part of the respective grain interfaces.
-A grain class implements one or more previously declared grain interfaces.
-All methods of a grain interface must return a <code>Task</code> (for <code>void</code> methods), a <code>Task&lt;T&gt;</code> or a <code>ValueTask&lt;T&gt;</code>(for methods returning values of type <code>T</code>).</p>
+<p>Grains interact with each other and get called from outside by invoking methods declared as part of the respective grain interfaces. A grain class implements one or more previously declared grain interfaces. All methods of a grain interface must return a <code>Task</code> (for <code>void</code> methods), a <code>Task&lt;T&gt;</code> or a <code>ValueTask&lt;T&gt;</code>(for methods returning values of type <code>T</code>).</p>
 <p>The following is an excerpt from the Orleans version 1.5 Presence Service sample:</p>
 <pre><code class="lang-csharp">//an example of a Grain Interface
 public interface IPlayerGrain : IGrainWithGuidKey
@@ -130,28 +126,25 @@ public class PlayerGrain : Grain, IPlayerGrain
    }
 }
 </code></pre><h1 id="returning-values-from-grain-methods">Returning Values from Grain Methods</h1>
-<p>A grain method that returns a value of type <code>T</code> is defined in a grain interface as returning a <code>Task&lt;T&gt;</code>.
-For grain methods not marked with the <code>async</code> keyword, when the return value is available, it is usually returned via the following statement:</p>
+<p>A grain method that returns a value of type <code>T</code> is defined in a grain interface as returning a <code>Task&lt;T&gt;</code>. For grain methods not marked with the <code>async</code> keyword, when the return value is available, it is usually returned via the following statement:</p>
 <pre><code class="lang-csharp">public Task&lt;SomeType&gt; GrainMethod1()
 {
     ...
     return Task.FromResult(&lt;variable or constant with result&gt;);
 }
-</code></pre><p>A grain method that returns no value, effectively a void method, is defined in a grain interface as returning a <code>Task</code>.
-The returned <code>Task</code> indicates asynchronous execution and completion of the method.
-For grain methods not marked with the <code>async</code> keyword, when a &quot;void&quot; method completes its execution, it needs to return the special value of <code>Task.CompletedTask</code>:</p>
+</code></pre><p>A grain method that returns no value, effectively a void method, is defined in a grain interface as returning a <code>Task</code>. The returned <code>Task</code> indicates asynchronous execution and completion of the method. For grain methods not marked with the <code>async</code> keyword, when a &quot;void&quot; method completes its execution, it needs to return the special value of <code>Task.CompletedTask</code>:</p>
 <pre><code class="lang-csharp">public Task GrainMethod2()
 {
     ...
     return Task.CompletedTask;
 }
-</code></pre><p>A grain method marked as <code>async</code> returns the value directly:</p>
+</code></pre><p>即使它们是同一类型，不同的Grain类型也可以使用不同的配置存储提供程序：例如，两个不同的Azure Table Storage提供程序实例连接到不同的Azure存储帐户。</p>
 <pre><code class="lang-csharp">public async Task&lt;SomeType&gt; GrainMethod3()
 {
     ...
     return &lt;variable or constant with result&gt;;
 }
-</code></pre><p>A &quot;void&quot; grain method marked as <code>async</code> that returns no value simply returns at the end of its execution:</p>
+</code></pre><p>当激活grains时，将自动读取grains状态，但是grains负责在必要时显式触发任何更改的grains状态的写入。</p>
 <pre><code class="lang-csharp">public async Task GrainMethod4()
 {
     ...
@@ -172,34 +165,45 @@ For grain methods not marked with the <code>async</code> keyword, when a &quot;v
     return task;
 }
 </code></pre><p><code>ValueTask&lt;T&gt;</code> can be used instead of <code>Task&lt;T&gt;</code></p>
-<h3 id="grain-reference">Grain Reference</h3>
-<p>A Grain Reference is a proxy object that implements the same grain interface as the corresponding grain class.
-It encapsulates the logical identity (type and unique key) of the target grain.
-A grain reference is used for making calls to the target grain.
-Each grain reference is to a single grain (a single instance of the grain class), but one can create multiple independent references to the same grain.</p>
-<p>Since a grain reference represents the logical identity of the target grain, it is independent from the physical location of the grain, and stays valid even after a complete restart of the system.
-Developers can use grain references like any other .NET object.
-It can be passed to a method, used as a method return value, etc., and even saved to persistent storage.</p>
+<h3 id="读取状态">读取状态</h3>
+<p>A Grain Reference is a proxy object that implements the same grain interface as the corresponding grain class. It encapsulates the logical identity (type and unique key) of the target grain. A grain reference is used for making calls to the target grain. Each grain reference is to a single grain (a single instance of the grain class), but one can create multiple independent references to the same grain.</p>
+<p>Since a grain reference represents the logical identity of the target grain, it is independent from the physical location of the grain, and stays valid even after a complete restart of the system. Developers can use grain references like any other .NET object. It can be passed to a method, used as a method return value, etc., and even saved to persistent storage.</p>
 <p>A grain reference can be obtained by passing the identity of a grain to the <code>GrainFactory.GetGrain&lt;T&gt;(key)</code> method, where <code>T</code> is the grain interface and <code>key</code> is the unique key of the grain within the type.</p>
-<p>The following are examples of how to obtain a grain reference of the <code>IPlayerGrain</code> interface defined above.</p>
+<p>见<a href="#FailureModes">失败模式</a>以下部分提供了有关错误处理机制的详细信息。</p>
 <p>From inside a grain class:</p>
-<pre><code class="lang-csharp">    //construct the grain reference of a specific player
-    IPlayerGrain player = GrainFactory.GetGrain&lt;IPlayerGrain&gt;(playerId);
-</code></pre><p>From Orleans Client code.</p>
-<pre><code class="lang-csharp">    IPlayerGrain player = client.GetGrain&lt;IPlayerGrain&gt;(playerId);
-</code></pre><h3 id="grain-method-invocation">Grain Method Invocation</h3>
-<p>The Orleans programming model is based on <a href="https://docs.microsoft.com/en-us/dotnet/csharp/async">Asynchronous Programming</a>.</p>
-<p>Using the grain reference from the previous example, here&#39;s how to perform a grain method invocation:</p>
+<pre><code class="lang-csharp">    public class UserGrain : Grain, IUserGrain
+{
+  private readonly IPersistentState&lt;ProfileState&gt; _profile;
+
+  public UserGrain([PersistentState(&quot;profile&quot;, &quot;profileStore&quot;)] IPersistentState&lt;ProfileState&gt; profile)
+  {
+    _profile = profile;
+  }
+
+  public Task&lt;string&gt; GetNameAsync() =&gt; Task.FromResult(_profile.State.Name);
+
+  public async Task SetNameAsync(string name)
+  {
+    _profile.State.Name = name;
+    await _profile.WriteStateAsync();
+  }
+}
+</code></pre><p>在Grains可以使用持久化之前，必须在silos上配置存储提供程序。</p>
+<pre><code class="lang-csharp">    [StorageProvider(ProviderName=&quot;store1&quot;)]
+public class MyGrain : Grain&lt;MyGrainState&gt;, /*...*/
+{
+  /*...*/
+}
+</code></pre><h3 id="写入状态">写入状态</h3>
+<p>首先，配置存储提供程序：</p>
+<p>现在，已经使用名称配置了存储提供程序<code>“ profileStore”</code>，我们可以从Grains访问此提供程序。</p>
 <pre><code class="lang-csharp">//Invoking a grain method asynchronously
 Task joinGameTask = player.JoinGame(this);
 //The await keyword effectively makes the remainder of the method execute asynchronously at a later point (upon completion of the Task being awaited) without blocking the thread.
 await joinGameTask;
 //The next line will execute later, after joinGameTask has completed.
 players.Add(playerId);
-</code></pre><p>It is possible to join two or more <code>Tasks</code>; the join operation creates a new <code>Task</code> that is resolved when all of its constituent <code>Task</code>s are completed.
-This is a useful pattern when a grain needs to start multiple computations and wait for all of them to complete before proceeding.
-For example, a front-end grain that generates a web page made of many parts might make multiple back-end calls, one for each part, and receive a <code>Task</code> for each result.
-The grain would then await the join of all of these <code>Tasks</code>; when the join <code>Task</code> is resolved, the individual <code>Task</code>s have been completed, and all the data required to format the web page has been received.</p>
+</code></pre><p>It is possible to join two or more <code>Tasks</code>; the join operation creates a new <code>Task</code> that is resolved when all of its constituent <code>Task</code>s are completed. This is a useful pattern when a grain needs to start multiple computations and wait for all of them to complete before proceeding. For example, a front-end grain that generates a web page made of many parts might make multiple back-end calls, one for each part, and receive a <code>Task</code> for each result. The grain would then await the join of all of these <code>Tasks</code>; when the join <code>Task</code> is resolved, the individual <code>Task</code>s have been completed, and all the data required to format the web page has been received.</p>
 <p>Example:</p>
 <pre><code class="lang-csharp">List&lt;Task&gt; tasks = new List&lt;Task&gt;();
 Message notification = CreateNewMessage(text);
@@ -214,13 +218,8 @@ Task joinedTask = Task.WhenAll(tasks);
 await joinedTask;
 
 // Execution of the rest of the method will continue asynchronously after joinedTask is resolve.
-</code></pre><h3 id="virtual-methods">Virtual methods</h3>
-<p>A grain class can optionally override <code>OnActivateAsync</code> and <code>OnDeactivateAsync</code> virtual methods; these are invoked by the Orleans runtime upon activation and deactivation of each grain of the class.
-This gives the grain code a chance to perform additional initialization and cleanup operations.
-An exception thrown by <code>OnActivateAsync</code> fails the activation process.
-While <code>OnActivateAsync</code>, if overridden, is always called as part of the grain activation process, <code>OnDeactivateAsync</code> is not guaranteed to get called in all situations, for example, in case of a server failure or other abnormal event.
-Because of that, applications should not rely on <code>OnDeactivateAsync</code> for performing critical operations such as persistence of state changes.
-They should use it only for best-effort operations.</p>
+</code></pre><h3 id="状态清理">状态清理</h3>
+<p>A grain class can optionally override <code>OnActivateAsync</code> and <code>OnDeactivateAsync</code> virtual methods; these are invoked by the Orleans runtime upon activation and deactivation of each grain of the class. This gives the grain code a chance to perform additional initialization and cleanup operations. 该状态将在<code>OnActivateAsync</code>调用。 While <code>OnActivateAsync</code>, if overridden, is always called as part of the grain activation process, <code>OnDeactivateAsync</code> is not guaranteed to get called in all situations, for example, in case of a server failure or other abnormal event. Because of that, applications should not rely on <code>OnDeactivateAsync</code> for performing critical operations such as persistence of state changes. They should use it only for best-effort operations.</p>
 </article>
           </div>
           

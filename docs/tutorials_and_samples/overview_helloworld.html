@@ -75,15 +75,14 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-<h1 id="overview-hello-world">Overview: Hello World</h1>
+<h1 id="概述hello-world">概述：Hello World</h1>
 
-<p>This overview ties into the Hello World sample application available <a href="https://github.com/dotnet/orleans/tree/master/Samples/2.0/HelloWorld">here</a>.</p>
-<p>The main concepts of Orleans involve a silo, a client, and one or more grains.
-Creating an Orleans app involves configuring the silo, configuring the client, and writing the grains.</p>
-<h2 id="configuring-the-silo">Configuring the silo</h2>
-<p>Silos are configured programmatically via <code>SiloHostBuilder</code> and a number of supplemental option classes.
-A list of all of the options can be found <a href="../host/configuration_guide/list_of_options_classes.html">here.</a></p>
+<p>此概述与可用的Hello World示例应用程序相关联<a href="https://github.com/dotnet/orleans/tree/master/Samples/2.0/HelloWorld">这里</a>。</p>
+<p>Orleans的主要概念包括silos，客户和一种或多种Grains。 创建Orleans应用程序涉及配置silos，配置客户端和开发Grain。</p>
+<h2 id="配置silos">配置silos</h2>
+<p>通过以下方式以编程方式配置silos<code>SiloHostBuilder</code>和许多追加的选项（option）类。 可以找到所有选项的列表<a href="http://dotnet.github.io/orleans/Documentation/clusters_and_clients/configuration_guide/list_of_options_classes.html">这里。 </a></p>
 <pre><code class="lang-csharp">[...]
+        [...]
         private static async Task&lt;ISiloHost&gt; StartSilo()
         {
             // define the cluster configuration
@@ -105,32 +104,32 @@ A list of all of the options can be found <a href="../host/configuration_guide/l
 </code></pre><table>
 <thead>
 <tr>
-<th>Option</th>
-<th>Used for</th>
+<th>选项</th>
+<th>用于</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>.UseLocalhostClustering()</code></td>
-<td>Configures the client to connect to a silo on the localhost.</td>
+<td>将客户端配置为连接到本地主机上的silos。</td>
 </tr>
 <tr>
-<td><code>ClusterOptions</code></td>
-<td>ClusterId is the name for the Orleans cluster must be the same for silo and client so they can talk to each other. ServiceId is the ID used for the application and it must not change across deployments</td>
+<td><code>集群选项</code></td>
+<td>ClusterId是Orleans群集的名称，对于silos和客户端，名称必须相同，以便彼此对话。 ServiceId是用于应用程序的ID，并且在部署之间不得更改</td>
 </tr>
 <tr>
 <td><code>EndpointOptions</code></td>
-<td>This tells the silo where to listen. For this example, we are using a <code>loopback</code>.</td>
+<td>这告诉silos在哪里听。 在此示例中，我们使用了<code>回送</code>。</td>
 </tr>
 <tr>
-<td><code>ConfigureApplicationParts</code></td>
-<td>Adds the grain class and interface assembly as application parts to your orleans application.</td>
+<td><code>配置应用程序部件</code></td>
+<td>将Grain类和接口程序集作为应用程序部分添加到您的orleans应用程序中。</td>
 </tr>
 </tbody>
 </table>
-<p>After loading the configurations, the SiloHost is built and then started asynchronously.</p>
-<h2 id="configuring-the-client">Configuring the client</h2>
-<p>Similar to the silo, the client is configured via <code>ClientBuilder</code> and a similar collection of option classes.</p>
+<p>加载配置后，将构建SiloHost，然后异步启动。</p>
+<h2 id="配置客户端">配置客户端</h2>
+<p>与silos类似，客户端通过以下方式配置<code>ClientBuilder</code>以及类似的追加的选项（option）类集合。</p>
 <pre><code class="lang-csharp">        private static async Task&lt;IClusterClient&gt; StartClientWithRetries()
         {
             attempt = 0;
@@ -152,31 +151,28 @@ A list of all of the options can be found <a href="../host/configuration_guide/l
 </code></pre><table>
 <thead>
 <tr>
-<th>Option</th>
-<th>Used for</th>
+<th>选项</th>
+<th>用于</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>.UseLocalhostClustering()</code></td>
-<td>Same as for SiloHost</td>
+<td>与SiloHost相同</td>
 </tr>
 <tr>
-<td><code>ClusterOptions</code></td>
-<td>Same as for SiloHost</td>
+<td><code>集群选项</code></td>
+<td>与SiloHost相同</td>
 </tr>
 </tbody>
 </table>
-<p>A more in-depth guide to configuring your client can be found <a href="../host/configuration_guide/client_configuration.html">in the Client Configuration section of the Configuration Guide.</a></p>
-<h2 id="writing-a-grain">Writing a grain</h2>
-<p>Grains are the key primitives of the Orleans programming model.
-Grains are the building blocks of an Orleans application, they are atomic units of isolation, distribution, and persistence.
-Grains are objects that represent application entities.
-Just like in the classic Object Oriented Programming, a grain encapsulates state of an entity and encodes its behavior in the code logic.
-Grains can hold references to each other and interact by invoking each other’s methods exposed via interfaces.</p>
-<p>You can read more about them in the <a href="../grains/index.html">Core Concepts section of the Orleans documentation.</a></p>
-<p>This is the main body of code for the Hello World grain:</p>
+<p>可以找到有关配置客户端的更深入的指南<a href="http://dotnet.github.io/orleans/Documentation/clusters_and_clients/configuration_guide/client_configuration.html">在配置指南的客户端配置部分中。 </a></p>
+<h2 id="开发一个grain">开发一个grain</h2>
+<p>Grains是Orleans编程模型的关键原语。 Grains是Orleans应用程序的基础，它们是隔离，分布和持久化的原子单位。 Grains是代表应用程序实体的对象。 就像经典的面向对象编程一样，grain封装了实体的状态，并在代码逻辑中对其行为进行了编码。 Grains可以相互保持引用，并可以通过调用彼此通过接口公开的方法进行交互。</p>
+<p>您可以在<a href="http://dotnet.github.io/orleans/Documentation/core_concepts/index.html">Orleans文档的“核心概念”部分。 </a></p>
+<p>这是Hello World Grain的代码主体：</p>
 <pre><code class="lang-csharp">[...]
+[...]
 namespace HelloWorld.Grains
 {
     public class HelloGrain : Orleans.Grain, IHello
@@ -188,8 +184,9 @@ namespace HelloWorld.Grains
         }
     }
 }
-</code></pre><p>A grain class implements one or more grain interfaces, as you can read <a href="../grains/index.html">here, in the Grains section.</a></p>
+</code></pre><p>您可以阅读，grain类实现一个或多个grain接口<a href="http://dotnet.github.io/orleans/Documentation/grains/index.html">在这里，在Grains部分。 </a>)</p>
 <pre><code class="lang-csharp">[...]
+[...]
 namespace HelloWorld.Interfaces
 {
     public interface IHello : Orleans.IGrainWithIntegerKey
@@ -197,12 +194,8 @@ namespace HelloWorld.Interfaces
         Task&lt;string&gt; SayHello(string greeting);
     }
 }
-</code></pre><h2 id="how-the-parts-work-together">How the parts work together</h2>
-<p>This programming model is built as part of our core concept of distributed Object Oriented Programming.
-SiloHost is started first.
-Then, the OrleansClient program is started.
-The Main method of OrleansClient calls the method that starts the client, <code>StartClientWithRetries().</code>
-The client is passed to the <code>DoClientWork()</code> method.</p>
+</code></pre><h2 id="组件如何协同工作">组件如何协同工作</h2>
+<p>建立此编程模型是我们分布式面向对象编程的核心概念的一部分。 SiloHost首先启动。 然后，启动OrleansClient程序。 OrleansClient的Main方法调用启动客户端的方法，<code>StartClientWithRetries()。</code>客户端被传递给<code>DoClientWork()</code>方法。</p>
 <pre><code class="lang-csharp">
         private static async Task DoClientWork(IClusterClient client)
         {
@@ -211,12 +204,9 @@ The client is passed to the <code>DoClientWork()</code> method.</p>
             var response = await friend.SayHello(&quot;Good morning, my friend!&quot;);
             Console.WriteLine(&quot;\n\n{0}\n\n&quot;, response);
         }
-</code></pre><p>At this point, OrleansClient creates a reference to the IHello grain and calls its SayHello() method through its interface, IHello.
-This call activates the grain in the silo.
-OrleansClient sends a greeting to the activated grain.
-The grain returns the greeting as a response to OrleansClient, which OrleansClient displays on the console.</p>
-<h2 id="running-the-sample-app">Running the sample app</h2>
-<p>To run the sample app, refer to the <a href="https://github.com/dotnet/orleans/tree/master/Samples/2.0/HelloWorld">Readme.</a></p>
+</code></pre><p>此时，OrleansClient创建对IHellograins的引用，并通过其接口IHello调用其SayHello()方法。 此调用激活silos中的Grains。 OrleansClient向激活的Grains发送问候语。 Grains返回问候作为对OrleansClient的响应，OrleansClient在控制台上显示该问候。</p>
+<h2 id="运行示例应用">运行示例应用</h2>
+<p>要运行示例应用程序，请参阅<a href="https://github.com/dotnet/orleans/tree/master/Samples/2.0/HelloWorld">自述文件。 </a></p>
 </article>
           </div>
           

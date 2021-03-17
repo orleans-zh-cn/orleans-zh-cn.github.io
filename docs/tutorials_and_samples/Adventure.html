@@ -77,31 +77,31 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="adventure">Adventure</h1>
 
-<p>A simple multiplayer text adventure game inspired by old-fashioned, text-based adventure games.</p>
-<h3 id="instructions">Instructions</h3>
+<p>一个简单的多人文本冒险游戏，其灵感来自老式的、基于文本的冒险游戏。</p>
+<h3 id="说明书">说明书</h3>
 <ol>
-<li>Open OrleansAdventure.sln in Visual Studio. Found <a href="https://github.com/dotnet/orleans/tree/master/Samples/2.0/Adventure">here.</a></li>
-<li>Start the &#39;AdventureSetup&#39; project.</li>
-<li>Once AdventureSetup is running, start the &#39;AdventureClient&#39; project.</li>
-<li>You will then be prompted to enter your name on the command line. Enter it and begin the game.</li>
+<li>在 Visual Studio 打开 OrleansAdventure.sln 项目。 你可以 <a href="https://github.com/dotnet/orleans/tree/master/Samples/2.0/Adventure">在这里</a> 找到他。</li>
+<li>启动“AdventureSetup”项目。</li>
+<li>当AdventureSetup运行成功后，启动“AdventureClient”项目。</li>
+<li>然后系统会提示您在命令行中输入您的姓名。 进入并开始游戏。</li>
 </ol>
-<h3 id="overview">Overview</h3>
-<p>The AdventureSetup program reads a game description (&quot;map&quot;) from AdventureConfig.txt.</p>
-<p>It sets up a series of &quot;rooms&quot; e.g. forest, beach, caves, a clearing etc . These locations are connected to other rooms to model the places and layout of the game. The sample configuration describes only a handful of locations.</p>
-<p>Rooms can contain &quot;things&quot; such as keys, swords etc.</p>
-<p>The AdventureClient program sets up your player and provides a simple text based user interface to allow you to play the game.</p>
-<p>You can move around rooms and interact with things using a simple command language, saying things such as &quot;go north&quot; or &quot;take brass key&quot;.</p>
-<h3 id="why-orleans">Why Orleans?</h3>
-<p>Orleans allows the game to be described via very simple C# code while allowing it to scale to a massive multiplayer game. For this motivation to be meaningful, the labyrinth of rooms needs to be very large and need to support a large number of simultaneous players. One value of Orleans is that the service can be designed for growth, the overhead of running it at a small scale is not significant, and you can remain confident that it will scale if the need arises.</p>
-<h3 id="how-is-it-modeled">How is it modeled?</h3>
-<p>Player and Rooms are modeled as grains. These grains allow us to distribute the game with each grain modelling state and functionality.</p>
-<p>Things such as keys are modeled as plain old objects - they are really just simple immutable data structures that move around rooms and among players; they don&#39;t need to be grains.</p>
-<h3 id="possible-improvements">Possible improvements</h3>
+<h3 id="概述">概述</h3>
+<p>AdventureSetup程序从 AdventureConfig.txt 中读取游戏配置(&quot;地图&quot;)。</p>
+<p>它设置了一系列的“房间”，如森林、海滩、洞穴、空地等。 这些位置连接到其他房间，以模拟游戏的位置和布局。 该示例配置仅描述了少数位置。</p>
+<p>房间里可以放钥匙、剑等“东西”。</p>
+<p>AdventureClient程序设置您的播放器，并提供一个简单的基于文本的用户界面，允许您玩游戏。</p>
+<p>您可以使用简单的命令语言在房间中移动并与事物进行交互，例如说“go north”或“take brass key”。</p>
+<h3 id="为什么使用orleans">为什么使用Orleans？</h3>
+<p>Orleans允许游戏通过非常简单的C#代码来描述游戏，同时允许它扩展到大型多人游戏。 为了使这个动机有意义，房间的迷宫需要非常大，并且需要同时支持大量玩家。 使用Orleans的一个优点是，该服务可以应对增量而设计，以小规模运行它的开销并不显著，而且您可以确信，当需要时它将是可以扩展的。</p>
+<h3 id="它是如何建模的">它是如何建模的？</h3>
+<p>玩家和房间被建模为Grains。 这些Grains使我们能够用每个Grains模型状态和功能来分发游戏。</p>
+<p>像密钥这样的东西被建模为“plain old objects”——它们实际上只是简单的不可变的数据结构，并且可以在房间里和玩家之间移动，所以它们不需要设计为Grains。</p>
+<h3 id="可能的改进">可能的改进</h3>
 <ol>
-<li>Make the map much, much, bigger</li>
-<li>Make the brass key unlock something</li>
-<li>Allow players to message each other</li>
-<li>Make eating food and drinking water possible and meaningful</li>
+<li>把地图弄得非常、非常大</li>
+<li>让铜钥匙打开一些东西</li>
+<li>允许玩家互相留言</li>
+<li>使食物和饮用水成为可能和有实际的作用。</li>
 </ol>
 </article>
           </div>

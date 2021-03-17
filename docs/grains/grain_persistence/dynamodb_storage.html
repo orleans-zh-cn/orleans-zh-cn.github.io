@@ -77,10 +77,10 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="amazon-dynamodb-grain-persistence">Amazon DynamoDB Grain Persistence</h1>
 
-<h2 id="installation">Installation</h2>
-<p>Install the <a href="https://www.nuget.org/packages/Microsoft.Orleans.Persistence.DynamoDB"><code>Microsoft.Orleans.Persistence.DynamoDB</code></a> package from NuGet.</p>
-<h2 id="configuration">Configuration</h2>
-<p>Configure the Dynamo DB grain persistence provider using the <code>ISiloBuilder.AddDynamoDBGrainStorage</code> extension methods.</p>
+<h2 id="安装">安装</h2>
+<p>安装<a href="https://www.nuget.org/packages/Microsoft.Orleans.Persistence.DynamoDB">Microsoft.Orleans.Persistence.DynamoDB</a>NuGet的软件包。</p>
+<h2 id="组态">组态</h2>
+<p>使用以下命令配置Dynamo DB Grain Persistence提供程序<code>ISiloBuilder.AddDynamoDBGrainStorage</code>扩展方法。</p>
 <pre><code class="lang-csharp">siloBuilder.AddDynamoDBGrainStorage(
     name: &quot;profileStore&quot;,
     configureOptions: options =&gt;

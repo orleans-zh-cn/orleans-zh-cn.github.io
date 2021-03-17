@@ -78,13 +78,8 @@
 <h1 id="grain-directory">Grain Directory</h1>
 
 <h2 id="what-is-the-grain-directory">What is the Grain Directory?</h2>
-<p>Grains have stable logical identities and may get activated (instantiated) and deactivated many times over the life of the application, but at most one activation of grain exist at any point in time.
-Each time a grain gets activated, it may be placed on a different silo in the cluster.
-When a grain gets activated in the cluster, it gets registered in the global registry, Grain Directory.
-This ensures that subsequent invocations of that grain will be delivered to that activation of the grain, and that no other activations (instances) of that grain will be created.
-Grain Directory is responsible for keeping a mapping between a grain identity and where (which silo) its current activation is at.</p>
-<p>By default, Orleans uses a built-in distributed in-memory directory. 
-This directory is eventually consistent and partitioned across all silos in the cluster in a form of a Distributed Hash Table.</p>
+<p>Grains have stable logical identities and may get activated (instantiated) and deactivated many times over the life of the application, but at most one activation of grain exist at any point in time. Each time a grain gets activated, it may be placed on a different silo in the cluster. When a grain gets activated in the cluster, it gets registered in the global registry, Grain Directory. This ensures that subsequent invocations of that grain will be delivered to that activation of the grain, and that no other activations (instances) of that grain will be created. Grain Directory is responsible for keeping a mapping between a grain identity and where (which silo) its current activation is at.</p>
+<p>By default, Orleans uses a built-in distributed in-memory directory. This directory is eventually consistent and partitioned across all silos in the cluster in a form of a Distributed Hash Table.</p>
 <p>Starting with 3.2.0, Orleans also supports pluggable implementations of Grain Directory.</p>
 <p>Two such plugins are included in the 3.2.0 release:</p>
 <ul>
@@ -93,10 +88,7 @@ This directory is eventually consistent and partitioned across all silos in the 
 </ul>
 <p>You can configure which Grain Directory implementation to use on a per-grain type basis, and you can even inject your own implementation.</p>
 <h2 id="which-grain-directory-should-you-use">Which Grain Directory should you use?</h2>
-<p>We recommend to always start with the default one (built-in in-memory distributed directory).
-Even though it is eventually consistent and allows for occasional duplicate activation when cluster is unstable, the built-in directory is self-sufficient with no external dependencies, does not requires any configuration, and has been used in production the whole time.
-When you have some experience with Orleans and have a use case for Grain Directory a with stronger single-activation guarantee and/or want to minimize the number of grain that get deactivated when a silo in the cluster shuts down, consider using a storage-based implementation of Grain Directory, such as the Redis implementation.
-Try using it for one or a few grain types first, starting with those that are long-lived and have a significant amount of state or an expensive initialization process.</p>
+<p>We recommend to always start with the default one (built-in in-memory distributed directory). Even though it is eventually consistent and allows for occasional duplicate activation when cluster is unstable, the built-in directory is self-sufficient with no external dependencies, does not requires any configuration, and has been used in production the whole time. When you have some experience with Orleans and have a use case for Grain Directory a with stronger single-activation guarantee and/or want to minimize the number of grain that get deactivated when a silo in the cluster shuts down, consider using a storage-based implementation of Grain Directory, such as the Redis implementation. Try using it for one or a few grain types first, starting with those that are long-lived and have a significant amount of state or an expensive initialization process.</p>
 <h2 id="configuration">Configuration</h2>
 <h3 id="default-grain-directory-configuration">Default Grain Directory configuration</h3>
 <p>You don&#39;t have do to anything; the in-memory grain directory will be automatically used and partitioned across the cluster.</p>

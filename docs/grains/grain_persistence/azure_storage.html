@@ -77,13 +77,13 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="azure-storage-grain-persistence">Azure Storage Grain Persistence</h1>
 
-<p>The Azure Storage grain persistence provider supports both <a href="https://azure.microsoft.com/en-us/services/storage/blobs/">Azure Blob Storage</a> and <a href="https://azure.microsoft.com/en-us/services/storage/tables/">Azure Table Storage</a>.</p>
-<h2 id="installation">Installation</h2>
-<p>Install the <a href="https://www.nuget.org/packages/Microsoft.Orleans.Persistence.AzureStorage"><code>Microsoft.Orleans.Persistence.AzureStorage</code></a> package from NuGet.</p>
-<h2 id="configuration">Configuration</h2>
-<h3 id="azure-table-storage">Azure Table Storage</h3>
-<p>The Azure Table Storage provider stores state in a table row, splitting the state over multiple columns if the limits of a single column are exceeded. Each row can hold a maximum length of one megabyte, as <a href="https://docs.microsoft.com/en-us/azure/storage/common/storage-scalability-targets#azure-table-storage-scale-targets">imposed by Azure Table Storage</a>.</p>
-<p>Configure the Azure Table Storage grain persistence provider using the <code>ISiloBuilder.AddAzureTableGrainStorage</code> extension methods.</p>
+<p>Azure存储Grain持久化提供程序同时支持<a href="https://azure.microsoft.com/en-us/services/storage/blobs/">Azure Blob存储</a>和<a href="https://azure.microsoft.com/en-us/services/storage/tables/">Azure表存储</a>。</p>
+<h2 id="安装">安装</h2>
+<p>安装<a href="https://www.nuget.org/packages/Microsoft.Orleans.Persistence.AzureStorage"><code>Microsoft.Orleans.Persistence.AzureStorage</code></a>NuGet的软件包。</p>
+<h2 id="组态">组态</h2>
+<h3 id="azure表存储">Azure表存储</h3>
+<p>Azure表存储提供程序将状态存储在表行中，如果超出单个列的限制，则将状态分为多个列。 每行的最大长度为一兆字节，例如<a href="https://docs.microsoft.com/en-us/azure/storage/common/storage-scalability-targets#azure-table-storage-scale-targets">扩展Azure表存储</a>。</p>
+<p>使用以下命令配置Azure表存储Grain持久化提供程序<code>ISiloBuilder.AddAzureTableGrainStorage</code>扩展方法。</p>
 <pre><code class="lang-csharp">siloBuilder.AddAzureTableGrainStorage(
     name: &quot;profileStore&quot;,
     configureOptions: options =&gt;
@@ -91,9 +91,9 @@
         options.UseJson = true;
         options.ConnectionString = &quot;DefaultEndpointsProtocol=https;AccountName=data1;AccountKey=SOMETHING1&quot;;
     });
-</code></pre><h3 id="azure-blob-storage">Azure Blob Storage</h3>
-<p>The Azure Blob Storage provider stores state in a blob.</p>
-<p>Configure the Azure Blob Storage grain persistence provider using the <code>ISiloBuilder.AddAzureBlobGrainStorage</code> extension methods.</p>
+</code></pre><h3 id="azure-blob存储">Azure Blob存储</h3>
+<p>Azure Blob存储提供程序将状态存储在Blob中。</p>
+<p>使用以下命令配置Azure Blob存储Grain持久化提供程序<code>ISiloBuilder.AddAzureBlobGrainStorage</code>扩展方法。</p>
 <pre><code class="lang-csharp">siloBuilder.AddAzureBlobGrainStorage(
     name: &quot;profileStore&quot;,
     configureOptions: options =&gt;

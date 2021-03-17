@@ -75,27 +75,27 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-<h1 id="event-sourcing">Event Sourcing</h1>
+<h1 id="活动来源">活动来源</h1>
 
-<p>Event sourcing provides a flexible way to manage and persist grain state. An event-sourced grain has many potential advantages over a standard grain. For one, it can be used with many different storage provider configurations, and supports geo-replication across multiple clusters. Moreover, it cleanly separates the grain class from definitions of the grain state (represented by a grain state object) and grain updates (represented by event objects). </p>
-<p>The documentation is structured as follows:</p>
+<p>事件溯源提供了一种灵活的方式来管理和持久化Grain状态。 与标准Grains相比，事件源Grains具有许多潜在优势。 首先，它可以与许多不同的存储提供程序配置一起使用，并支持跨多个群集的地理复制。 此外，它还将grain类与grain状态(由grain状态对象表示)和grain更新(由事件对象表示)的定义完全分离。</p>
+<p>文件结构如下：</p>
 <ul>
-<li><p><a href="journaledgrain_basics.html">JournaledGrain Basics</a> explains how to define an event-sourced grains by deriving from <code>JournaledGrain</code>, how to access the current state, and how to raise events that update the state.</p>
+<li><p><a href="journaledgrain_basics.html">日志训练基础</a>解释如何通过从<code>日志记录</code>，如何访问当前状态，以及如何引发更新状态的事件。</p>
 </li>
-<li><p><a href="replicated_instances.html">Replicated Instances</a> explains how the event-sourcing mechanism handles replicated grain instances and ensures consistency. It discusses the possibility of racing events and conflicts, and how to address them.</p>
+<li><p><a href="replicated_instances.html">复制实例</a>解释事件源机制如何处理复制的grain实例并确保一致性。 它讨论了比赛事件和冲突的可能性，以及如何解决它们。</p>
 </li>
-<li><p><a href="immediate_vs_delayed_confirmation.html">Immediate/Delayed Confirmation</a> explains how delayed confirmation of events, and reentrancy, can improve availability and throughput.</p>
+<li><p><a href="immediate_vs_delayed_confirmation.html">立即/延迟确认</a>解释延迟的事件确认和重新进入如何提高可用性和吞吐量。</p>
 </li>
-<li><p><a href="notifications.html">Notifications</a> explains how to subscribe to notifications, allowing grains to react to new events.</p>
+<li><p><a href="notifications.html">通知</a>解释如何订阅通知，允许Grains对新事件作出反应。</p>
 </li>
-<li><p><a href="event_sourcing_configuration.html">Event Sourcing Configuration</a> explains how to configure projects, clusters, and log-consistency providers.</p>
+<li><p><a href="event_sourcing_configuration.html">事件源配置</a>说明如何配置项目、群集和日志一致性提供程序。</p>
 </li>
-<li><p><a href="log_consistency_providers.html">Built-In Log-Consistency Providers</a> explains how the three currently included log-consistency providers work.</p>
+<li><p><a href="log_consistency_providers.html">内置日志一致性提供程序</a>解释当前包含的三个日志一致性提供程序的工作方式。</p>
 </li>
-<li><p><a href="journaledgrain_diagnostics.html">JournaledGrain Diagnostics</a> explains how to monitor for connection errors, and get simple statistics.</p>
+<li><p><a href="journaledgrain_diagnostics.html">日志Grain诊断</a>解释如何监视连接错误，并获取简单的统计信息。</p>
 </li>
 </ul>
-<p>The behavior documented above is reasonably stable, as far as the JournaledGrain API is concerned. However, we expect to extend or change the list of log consistency providers soon, to more easily allow developers to plug in  standard event storage systems.</p>
+<p>就journaledgrain api而言，上面记录的行为是相当稳定的。 但是，我们希望很快扩展或更改日志一致性提供程序列表，以便更容易地允许开发人员插入标准事件存储系统。</p>
 </article>
           </div>
           

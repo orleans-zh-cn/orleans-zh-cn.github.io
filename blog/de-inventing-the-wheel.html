@@ -77,15 +77,10 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="de-inventing-the-wheel">De-inventing the wheel</h1>
 
-<p><a href="https://github.com/jdom">Julian Dominguez</a>
-4/12/2017 2:49:11 PM</p>
+<p><a href="https://github.com/jdom">Julian Dominguez</a> 4/12/2017 2:49:11 PM</p>
 <hr>
-<p>The Microsoft Orleans project started many years ago in Microsoft Research, when not even the Task class existed.
-As the project matured, many non-core abstractions &amp; functionality was needed to support its growth.
-These abstractions didn&#39;t exist as standards in .NET and .NET OSS was in its infancy.
-Examples of these pieces are cross-cutting concerns such as Logging, Configuration, and Dependency Injection.</p>
-<p>As time passed, some common abstractions and patterns emerged, and it reached a point where it makes sense to just adopt them.
-There are many reasons as to why:</p>
+<p>The Microsoft Orleans project started many years ago in Microsoft Research, when not even the Task class existed. As the project matured, many non-core abstractions &amp; functionality was needed to support its growth. These abstractions didn&#39;t exist as standards in .NET and .NET OSS was in its infancy. Examples of these pieces are cross-cutting concerns such as Logging, Configuration, and Dependency Injection.</p>
+<p>As time passed, some common abstractions and patterns emerged, and it reached a point where it makes sense to just adopt them. There are many reasons as to why:</p>
 <ul>
 <li>Developers are used to the standard patterns and abstractions, so newcomers do not need to learn these non-core abstractions just to use Orleans.</li>
 <li>Standard abstractions have an enormous level of adoption with almost every 3rd party component related to that abstraction. On the other hand, today it requires that the Orleans community builds integration packages to many 3rd party components (ie: to use Serilog, log4net, or push events to ETW), as the owners of these will just create integration packages for the common abstractions, but not for Orleans or any other non-standard abstraction.</li>
@@ -95,16 +90,12 @@ There are many reasons as to why:</p>
 </ul>
 <p><img src="media/2017/04/reinvent-the-wheel.jpg" alt="Reinventing the wheel leads to unnecessary work"></p>
 <p>We already started using the <a href="https://www.nuget.org/packages/Microsoft.Extensions.DependencyInjection">Microsoft.Extensions.DependencyInjection</a> abstractions for enabling DI, moving away for our poor man&#39;s object activation (and 2-step initialization) approach in many places.</p>
-<p>As we move forward, we plan to deprecate some of our custom abstractions in favor of standard ones.
-In particular we are already thinking of 2 upcoming changes:</p>
+<p>As we move forward, we plan to deprecate some of our custom abstractions in favor of standard ones. In particular we are already thinking of 2 upcoming changes:</p>
 <ul>
-<li>Migrate our logging abstractions to
-<a href="https://www.nuget.org/packages/Microsoft.Extensions.Logging">Microsoft.Extensions.Logging</a>.</li>
+<li>Migrate our logging abstractions to <a href="https://www.nuget.org/packages/Microsoft.Extensions.Logging">Microsoft.Extensions.Logging</a>.</li>
 <li>Revamp our configuration and startup pattern to align with ASP.NET  Core&#39;s. See <a href="https://github.com/dotnet/orleans/issues/2936">dotnet/orleans#2936</a> for an initial design of this move.</li>
 </ul>
-<p>As always, we&#39;ll try to keep breaking changes to a minimum, but we don&#39;t strictly prevent breaking changes.
-Sometimes we make our new versions be source code compatible (meaning that developers can&#39;t simply use binding redirects on Orleans assemblies, but re-building their code might still compile) or require a few minimal fixes.
-Sometimes breaking changes are *bigger* if they would just affect a small feature or something that is typically not spread-out through the entire codebase of our users (such as extensibility points that do not affect grain code).</p>
+<p>As always, we&#39;ll try to keep breaking changes to a minimum, but we don&#39;t strictly prevent breaking changes. Sometimes we make our new versions be source code compatible (meaning that developers can&#39;t simply use binding redirects on Orleans assemblies, but re-building their code might still compile) or require a few minimal fixes. Sometimes breaking changes are *bigger* if they would just affect a small feature or something that is typically not spread-out through the entire codebase of our users (such as extensibility points that do not affect grain code).</p>
 <p>Also, it seems like an appropriate time to look at these abstractions with a fresh mind, since that&#39;s what the .NET community seems to be doing when looking forward at things like ASP.NET and .NET Core.</p>
 </article>
           </div>

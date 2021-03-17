@@ -77,9 +77,7 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="unit-testing">Unit Testing</h1>
 
-<p>This tutorial shows how to unit test your grains to make sure they behave correctly.
-There are two main ways to unit test your grains, and the method you choose will depend on the type of functionality you are testing.
-The <code>Microsoft.Orleans.TestingHost</code> NuGet package can be used to create test silos for your grains, or you can use a mocking framework like <a href="https://github.com/moq/moq">Moq</a> to mock parts of the Orleans runtime that your grain interacts with.</p>
+<p>This tutorial shows how to unit test your grains to make sure they behave correctly. There are two main ways to unit test your grains, and the method you choose will depend on the type of functionality you are testing. The <code>Microsoft.Orleans.TestingHost</code> NuGet package can be used to create test silos for your grains, or you can use a mocking framework like <a href="https://github.com/moq/moq">Moq</a> to mock parts of the Orleans runtime that your grain interacts with.</p>
 <h2 id="using-testcluster">Using TestCluster</h2>
 <p>The <code>Microsoft.Orleans.TestingHost</code> NuGet package contains <code>TestCluster</code> which can be used to create an in-memory cluster, comprised of two silos by default, which can be used to test grains.</p>
 <pre><code class="lang-csharp">using System;
@@ -107,8 +105,7 @@ namespace Tests
         }
     }
 }
-</code></pre><p>Due to the overhead of starting an in-memory cluster you may wish to create a <code>TestCluster</code> and reuse it among multiple test cases.
-For example this can be done using xUnit&#39;s class or collection fixtures (see <a href="https://xunit.github.io/docs/shared-context.html">https://xunit.github.io/docs/shared-context.html</a> for more details).</p>
+</code></pre><p>Due to the overhead of starting an in-memory cluster you may wish to create a <code>TestCluster</code> and reuse it among multiple test cases. For example this can be done using xUnit&#39;s class or collection fixtures (see <a href="https://xunit.github.io/docs/shared-context.html">https://xunit.github.io/docs/shared-context.html</a> for more details).</p>
 <p>In order to share a <code>TestCluster</code> between multiple test cases, first create a fixture type:</p>
 <pre><code class="lang-csharp">public class ClusterFixture : IDisposable
 {
@@ -159,8 +156,7 @@ namespace Tests
         }
     }
 }
-</code></pre><p>xUnit will call the <code>Dispose</code> method of the <code>ClusterFixture</code> type when all tests have been completed and the in-memory cluster silos will be stopped.
-<code>TestCluster</code> also has a constructor which accepts <code>TestClusterOptions</code> that can be used to configure the silos in the cluster.</p>
+</code></pre><p>xUnit will call the <code>Dispose</code> method of the <code>ClusterFixture</code> type when all tests have been completed and the in-memory cluster silos will be stopped. <code>TestCluster</code> also has a constructor which accepts <code>TestClusterOptions</code> that can be used to configure the silos in the cluster.</p>
 <p>If you are using Dependency Injection in your Silo to make services available to Grains, you can use this pattern as well:</p>
 <pre><code class="lang-csharp">public class ClusterFixture : IDisposable
 {
@@ -188,13 +184,8 @@ public class TestSiloConfigurations : ISiloBuilderConfigurator {
     }
 }
 </code></pre><h2 id="using-mocks">Using Mocks</h2>
-<p>Orleans also makes it possible to mock many parts of system, and for many of scenarios this is the easiest way to unit test grains.
-This approach does have limitations (e.g. around scheduling reentrancy and serialization), and may require that grains include code used only by your unit tests.
-The <a href="https://github.com/OrleansContrib/OrleansTestKit">Orleans TestKit</a> provides an alternative approach which side-steps many of these limitations.</p>
-<p>For example, let us imagine that the grain we are testing interacts with other grains.
-In order to be able to mock those other grains we also need to mock the <code>GrainFactory</code> member of the grain under test.
-By default <code>GrainFactory</code> is a normal <code>protected</code> property, but most mocking frameworks require properties to be <code>public</code> and <code>virtual</code> to be able to mock them.
-So the first thing we need to do is make <code>GrainFactory</code> both <code>public</code> and <code>virtual</code> property:</p>
+<p>Orleans also makes it possible to mock many parts of system, and for many of scenarios this is the easiest way to unit test grains. This approach does have limitations (e.g. around scheduling reentrancy and serialization), and may require that grains include code used only by your unit tests. The <a href="https://github.com/OrleansContrib/OrleansTestKit">Orleans TestKit</a> provides an alternative approach which side-steps many of these limitations.</p>
+<p>For example, let us imagine that the grain we are testing interacts with other grains. In order to be able to mock those other grains we also need to mock the <code>GrainFactory</code> member of the grain under test. By default <code>GrainFactory</code> is a normal <code>protected</code> property, but most mocking frameworks require properties to be <code>public</code> and <code>virtual</code> to be able to mock them. So the first thing we need to do is make <code>GrainFactory</code> both <code>public</code> and <code>virtual</code> property:</p>
 <pre><code class="lang-csharp">public new virtual IGrainFactory GrainFactory
 {
     get { return base.GrainFactory; }
@@ -228,8 +219,7 @@ namespace Tests
         }
     }
 }
-</code></pre><p>Here we create our grain under test, <code>WorkerGrain</code>, using Moq which means we can then override the behaviour of the <code>GrainFactory</code> so that it returns a mocked <code>IJournalGrain</code>.
-We can then verify that our <code>WorkerGrain</code> interacts with the <code>IJournalGrain</code> as we expect.</p>
+</code></pre><p>Here we create our grain under test, <code>WorkerGrain</code>, using Moq which means we can then override the behaviour of the <code>GrainFactory</code> so that it returns a mocked <code>IJournalGrain</code>. We can then verify that our <code>WorkerGrain</code> interacts with the <code>IJournalGrain</code> as we expect.</p>
 </article>
           </div>
           

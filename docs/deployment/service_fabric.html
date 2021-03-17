@@ -77,8 +77,7 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="service-fabric-hosting">Service Fabric Hosting</h1>
 
-<p>Orleans can be hosted on Service Fabric using the <code>Microsoft.Orleans.Hosting.ServiceFabric</code> package.
-Silos should be hosted as unpartitioned, stateless services since Orleans manages distribution of grains itself using fine-grained, dynamic distribution. Other hosting options (partitioned, stateful) are currently untested and unsupported.</p>
+<p>Orleans can be hosted on Service Fabric using the <code>Microsoft.Orleans.Hosting.ServiceFabric</code> package. Silos should be hosted as unpartitioned, stateless services since Orleans manages distribution of grains itself using fine-grained, dynamic distribution. Other hosting options (partitioned, stateful) are currently untested and unsupported.</p>
 <p>A sample which demonstrates hosting on Service Fabric is available at <a href="https://github.com/dotnet/orleans/tree/master/Samples/2.0/ServiceFabric">Samples/2.0/ServiceFabric</a>.</p>
 <p>Hosting support is available in the <code>Microsoft.Orleans.Hosting.ServiceFabric</code> package. It allows an Orleans Silo to run as a Service Fabric <code>ICommunicationListener</code>. The Silo lifecycle follows the typical communication listener lifecycle: it is initialized via the <code>ICommunicationListener.OpenAsync</code> method and is gracefully terminated via the <code>ICommunicationListener.CloseAsync</code> method or abruptly terminated via the <code>ICommunicationListener.Abort</code> method.</p>
 <p>Official clustering support is available from various packages including:</p>

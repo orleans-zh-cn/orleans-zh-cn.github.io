@@ -77,13 +77,9 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="troubleshooting-deployments">Troubleshooting Deployments</h1>
 
-<p>This page gives some general guidelines for troubleshooting any issues that occur while deploying to Azure Cloud Services.
-These are very common issues to watch out for. 
-Be sure to check the logs for more information.</p>
+<p>This page gives some general guidelines for troubleshooting any issues that occur while deploying to Azure Cloud Services. These are very common issues to watch out for. Be sure to check the logs for more information.</p>
 <h2 id="getting-a-silounavailableexception">Getting a SiloUnavailableException</h2>
-<p>First, check to make sure that you are actually starting the silos before attempting to initialize the client.
-Sometimes the silos take a long time to start so it can be beneficial to try to initialize the client multiple times.
-If it still throws an exception, then there might be another issue with the silos.</p>
+<p>First, check to make sure that you are actually starting the silos before attempting to initialize the client. Sometimes the silos take a long time to start so it can be beneficial to try to initialize the client multiple times. If it still throws an exception, then there might be another issue with the silos.</p>
 <p>Check the silo configuration and make sure that the silos are starting up properly.</p>
 <h2 id="common-connection-string-issues">Common Connection String Issues</h2>
 <ul>
@@ -92,21 +88,14 @@ If it still throws an exception, then there might be another issue with the silo
 <li><p>Using different connection strings for the silos and the front end (web and worker roles) – the website will fail to initialize the client because it cannot connect to the silos</p>
 </li>
 </ul>
-<p>The connection string configuration can be checked in the Azure Portal. The logs may not display properly if the connection
-strings are not set up correctly.</p>
+<p>The connection string configuration can be checked in the Azure Portal. The logs may not display properly if the connection strings are not set up correctly.</p>
 <h2 id="modifying-the-configuration-files-improperly">Modifying the Configuration Files Improperly</h2>
-<p>Make sure that the proper endpoints are configured in the ServiceDefinition.csdef file or else the deployment will not work.
-It will give errors saying that it cannot get the endpoint information.</p>
+<p>Make sure that the proper endpoints are configured in the ServiceDefinition.csdef file or else the deployment will not work. It will give errors saying that it cannot get the endpoint information.</p>
 <h2 id="missing-logs">Missing Logs</h2>
 <p>Make sure that the connection strings are set up properly.</p>
-<p>It is likely that the Web.config file in the web role or the app.config file in the worker role were modified improperly.
-Incorrect versions in these files can cause issues with the deployment.
-Be careful when dealing with updates.</p>
+<p>It is likely that the Web.config file in the web role or the app.config file in the worker role were modified improperly. Incorrect versions in these files can cause issues with the deployment. Be careful when dealing with updates.</p>
 <h2 id="version-issues">Version Issues</h2>
-<p>Make sure that the same version of Orleans is used in every project in the solution.
-Not doing this can lead to the worker role recycling.
-Check the logs for more information.
-Visual Studio provides some silo startup error messages in the deployment history.</p>
+<p>Make sure that the same version of Orleans is used in every project in the solution. Not doing this can lead to the worker role recycling. Check the logs for more information. Visual Studio provides some silo startup error messages in the deployment history.</p>
 <h2 id="role-keeps-recycling">Role Keeps Recycling</h2>
 <ul>
 <li><p>Check that all the appropriate Orleans assemblies are in the solution and have <code>Copy Local</code> set to <code>True</code>.</p>

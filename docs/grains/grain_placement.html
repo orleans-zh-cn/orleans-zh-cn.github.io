@@ -77,14 +77,9 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="grain-placement">Grain Placement</h1>
 
-<p>When a grain is activated in Orleans, the runtime decides which server (silo) to activate that grain on.
-This is called grain placement.
-The placement process in Orleans is fully configurable: developers can choose from a set of out-of-the-box placement policies such as random, prefer-local, and load-based, or custom logic can be configured.
-This allows for full flexibility in deciding where grains are created.
-For example, grains can be placed on a server close to resources which they need to operate on or close to other grains which they communicate with.</p>
+<p>When a grain is activated in Orleans, the runtime decides which server (silo) to activate that grain on. This is called grain placement. The placement process in Orleans is fully configurable: developers can choose from a set of out-of-the-box placement policies such as random, prefer-local, and load-based, or custom logic can be configured. This allows for full flexibility in deciding where grains are created. For example, grains can be placed on a server close to resources which they need to operate on or close to other grains which they communicate with.</p>
 <h2 id="sample-custom-placement-strategy">Sample custom placement strategy</h2>
-<p>First define a class which implements <code>IPlacementDirector</code> interface, requiring a single method.
-In this example we assume you have a function <code>GetSiloNumber</code> defined which will return a silo number given the guid of the grain about to be created.</p>
+<p>First define a class which implements <code>IPlacementDirector</code> interface, requiring a single method. In this example we assume you have a function <code>GetSiloNumber</code> defined which will return a silo number given the guid of the grain about to be created.</p>
 <pre><code class="lang-csharp">public class SamplePlacementStrategyFixedSiloDirector : IPlacementDirector
 {
 

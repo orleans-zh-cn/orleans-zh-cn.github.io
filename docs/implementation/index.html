@@ -78,19 +78,15 @@
 <h1 id="implementation-details-overview">Implementation Details Overview</h1>
 
 <h2 id="orleans-lifecycleorleanslifecyclemd"><a href="orleans_lifecycle.html">Orleans Lifecycle</a></h2>
-<p>Some Orleans behaviors are sufficiently complex that they need ordered startup and shutdown.
-To address this, a general component lifecycle pattern has been introduced.</p>
+<p>Some Orleans behaviors are sufficiently complex that they need ordered startup and shutdown. To address this, a general component lifecycle pattern has been introduced.</p>
 <h2 id="messaging-delivery-guaranteesmessagingdeliveryguaranteesmd"><a href="messaging_delivery_guarantees.html">Messaging Delivery Guarantees</a></h2>
-<p>Orleans messaging delivery guarantees are <strong>at-most-once</strong>, by default.
-Optionally, if configured to do retries upon timeout, Orleans provides at-least-once delivery instead.</p>
+<p>Orleans messaging delivery guarantees are <strong>at-most-once</strong>, by default. Optionally, if configured to do retries upon timeout, Orleans provides at-least-once delivery instead.</p>
 <h2 id="schedulerschedulermd"><a href="scheduler.html">Scheduler</a></h2>
 <p>Orleans Scheduler is a component within the Orleans runtime responsible for executing application code and parts of the runtime code to ensure the single threaded execution semantics.</p>
 <h2 id="cluster-managementclustermanagementmd"><a href="cluster_management.html">Cluster Management</a></h2>
-<p>Orleans provides cluster management via a built-in membership protocol, which we sometimes refer to as Silo Membership.
-The goal of this protocol is for all silos (Orleans servers) to agree on the set of currently alive silos, detect failed silos, and allow new silos to join the cluster.</p>
+<p>Orleans provides cluster management via a built-in membership protocol, which we sometimes refer to as Silo Membership. The goal of this protocol is for all silos (Orleans servers) to agree on the set of currently alive silos, detect failed silos, and allow new silos to join the cluster.</p>
 <h2 id="streams-implementationstreamsimplementationindexmd"><a href="streams_implementation/index.html">Streams Implementation</a></h2>
-<p>This section provides a high level overview of Orleans Stream implementation.
-It describes concepts and details that are not visible on the application level.</p>
+<p>This section provides a high level overview of Orleans Stream implementation. It describes concepts and details that are not visible on the application level.</p>
 <h2 id="load-balancingloadbalancingmd"><a href="load_balancing.html">Load Balancing</a></h2>
 <p>Load balancing, in a broad sense, is one of the pillars of the Orleans runtime.</p>
 <h2 id="unit-testingtestingmd"><a href="testing.html">Unit Testing</a></h2>

@@ -77,18 +77,13 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="migration-from-orleans-15-to-20-when-using-azure">Migration from Orleans 1.5 to 2.0 when using Azure</h1>
 
-<p>In Orleans 2.0, the configuration of silos and clients has changed.
-In Orleans 1.5 we used to have a monolith object that handled all the configuration pieces
-Providers were added to that configuration object, too.
-In Orleans 2.0, the configuration process is organizes around <code>SiloHostBuilder</code>, similar to how it is done in ASP.NET Core with the <code>WebHostBuilder</code>.</p>
+<p>In Orleans 2.0, the configuration of silos and clients has changed. In Orleans 1.5 we used to have a monolith object that handled all the configuration pieces Providers were added to that configuration object, too. In Orleans 2.0, the configuration process is organizes around <code>SiloHostBuilder</code>, similar to how it is done in ASP.NET Core with the <code>WebHostBuilder</code>.</p>
 <p>In Orleans 1.5, the configuration for Azure looked like this:</p>
 <pre><code class="lang-csharp">    var config = AzureSilo.DefaultConfiguration();
     config.AddMemoryStorageProvider();
     config.AddAzureTableStorageProvider(&quot;AzureStore&quot;, RoleEnvironment.GetConfigurationSettingValue(&quot;DataConnectionString&quot;));
-</code></pre><p>The <code>AzureSilo</code> class exposes a static method named DefaultConfiguration() that was used for loading configuration XML file.
-This way of configuring a silo is deprecated but still supported via the <a href="https://www.nuget.org/packages/Microsoft.Orleans.Core.Legacy/">legacy support package</a>.</p>
-<p>In Orleans 2.0, configuration is completely programmatic.
-The new configuration API  looks like this:</p>
+</code></pre><p>The <code>AzureSilo</code> class exposes a static method named DefaultConfiguration() that was used for loading configuration XML file. This way of configuring a silo is deprecated but still supported via the <a href="https://www.nuget.org/packages/Microsoft.Orleans.Core.Legacy/">legacy support package</a>.</p>
+<p>In Orleans 2.0, configuration is completely programmatic. The new configuration API  looks like this:</p>
 <pre><code class="lang-csharp">    //Load the different settings from the services configuration
     var proxyPort = RoleEnvironment.CurrentRoleInstance.InstanceEndpoints[&quot;OrleansProxyEndpoint&quot;].IPEndpoint.Port;
     var siloEndpoint = RoleEnvironment.CurrentRoleInstance.InstanceEndpoints[&quot;OrleansSiloEndpoint&quot;].IPEndpoint;
@@ -121,8 +116,7 @@ The new configuration API  looks like this:</p>
         //If Grain Storage is needed, add the service and set the name
         .AddAzureTableGrainStorage(&quot;AzureTableStore&quot;);
 </code></pre><h1 id="azuresilo-to-isilohost">AzureSilo to ISiloHost</h1>
-<p>In Orleans 1.5, the <code>AzureSilo</code> class was the recommended way to host a silo in an Azure Worker Role.
-This is still supported via the <a href="https://www.nuget.org/packages/Microsoft.Orleans.Hosting.AzureCloudServices/"><code>Microsoft.Orleans.Hosting.AzureCloudServices</code> NuGet package</a>.</p>
+<p>In Orleans 1.5, the <code>AzureSilo</code> class was the recommended way to host a silo in an Azure Worker Role. This is still supported via the <a href="https://www.nuget.org/packages/Microsoft.Orleans.Hosting.AzureCloudServices/"><code>Microsoft.Orleans.Hosting.AzureCloudServices</code> NuGet package</a>.</p>
 <pre><code class="lang-csharp">public class WorkerRole : RoleEntryPoint
 {
     AzureSilo silo;

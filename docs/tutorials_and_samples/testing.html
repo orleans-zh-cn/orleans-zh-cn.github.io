@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Unit Testing | Microsoft Orleans Documentation </title>
+    <title>&#21333;&#20803;&#27979;&#35797; | Microsoft Orleans Documentation </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Unit Testing | Microsoft Orleans Documentation ">
+    <meta name="title" content="&#21333;&#20803;&#27979;&#35797; | Microsoft Orleans Documentation ">
     <meta name="generator" content="docfx 2">
     
     <link rel="shortcut icon" href="../../favicon.ico">
@@ -75,13 +75,11 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-<h1 id="unit-testing">Unit Testing</h1>
+<h1 id="单元测试">单元测试</h1>
 
-<p>This tutorial shows how to unit test your grains to make sure they behave correctly.
-There are two main ways to unit test your grains, and the method you choose will depend on the type of functionality you are testing.
-The <code>Microsoft.Orleans.TestingHost</code> NuGet package can be used to create test silos for your grains, or you can use a mocking framework like <a href="https://github.com/moq/moq">Moq</a> to mock parts of the Orleans runtime that your grain interacts with.</p>
-<h2 id="using-testcluster">Using TestCluster</h2>
-<p>The <code>Microsoft.Orleans.TestingHost</code> NuGet package contains <code>TestCluster</code> which can be used to create an in-memory cluster, comprised of two silos by default, which can be used to test grains.</p>
+<p>本教程显示如何对Grains进行单元测试，以确保它们的行为正确。 对Grains进行单元测试的主要方法有两种，选择的方法将取决于要测试的功能类型。 这个<code>Microsoft.Orleans.TestingHost</code>NuGet包可用于为Grains创建测试silos，也可以使用模拟框架，例如<a href="https://github.com/moq/moq">moq</a>模拟您与之交互的Orleans运行时的各个部分。</p>
+<h2 id="使用testcluster">使用TestCluster</h2>
+<p>这个<code>Microsoft.Orleans.TestingHost</code>NuGet软件包包含<code>测试集群（TestCluster）</code>可以用来创建一个内存集群，默认情况下它由两个silos组成，可以用来测试Grains。</p>
 <pre><code class="lang-csharp">using System;
 using System.Threading.Tasks;
 using Orleans;
@@ -95,9 +93,7 @@ namespace Tests
         [Fact]
         public async Task SaysHelloCorrectly()
         {
-            var builder = new TestClusterBuilder();
-            builder.Options.ServiceId = Guid.NewGuid().ToString();
-            var cluster = builder.Build();
+            var cluster = new TestCluster();
             cluster.Deploy();
 
             var hello = cluster.GrainFactory.GetGrain&lt;IHelloGrain&gt;(Guid.NewGuid());
@@ -109,9 +105,8 @@ namespace Tests
         }
     }
 }
-</code></pre><p>Due to the overhead of starting an in-memory cluster you may wish to create a <code>TestCluster</code> and reuse it among multiple test cases.
-For example this can be done using xUnit&#39;s class or collection fixtures (see <a href="https://xunit.github.io/docs/shared-context.html">https://xunit.github.io/docs/shared-context.html</a> for more details).</p>
-<p>In order to share a <code>TestCluster</code> between multiple test cases, first create a fixture type:</p>
+</code></pre><p>由于启动内存集群的开销，您可能希望创建一个<code>测试集群</code>并在多个测试案例中重复使用。 例如，可以使用xUnit的类或集合夹具来完成此操作(请参见<a href="https://xunit.github.io/docs/shared-context.html">https://xunit.github.io/docs/shared-context.html</a>更多细节)。</p>
+<p>为了共享一个<code>测试集群</code>在多个测试用例之间，首先创建一个夹具类型：</p>
 <pre><code class="lang-csharp">public class ClusterFixture : IDisposable
 {
     public ClusterFixture()
@@ -127,13 +122,13 @@ For example this can be done using xUnit&#39;s class or collection fixtures (see
 
     public TestCluster Cluster { get; private set; }
 }
-</code></pre><p>Next create a collection fixture:</p>
+</code></pre><p>接下来创建一个集合夹具：</p>
 <pre><code class="lang-csharp">[CollectionDefinition(ClusterCollection.Name)]
 public class ClusterCollection : ICollectionFixture&lt;ClusterFixture&gt;
 {
     public const string Name = &quot;ClusterCollection&quot;;
 }
-</code></pre><p>You can now reuse a <code>TestCluster</code> in your test cases:</p>
+</code></pre><p>您现在可以重复使用<code>测试集群</code>在您的测试用例中：</p>
 <pre><code class="lang-csharp">using System;
 using System.Threading.Tasks;
 using Orleans;
@@ -161,9 +156,8 @@ namespace Tests
         }
     }
 }
-</code></pre><p>xUnit will call the <code>Dispose</code> method of the <code>ClusterFixture</code> type when all tests have been completed and the in-memory cluster silos will be stopped.
-<code>TestCluster</code> also has a constructor which accepts <code>TestClusterOptions</code> that can be used to configure the silos in the cluster.</p>
-<p>If you are using Dependency Injection in your Silo to make services available to Grains, you can use this pattern as well:</p>
+</code></pre><p>xUnit将调用<code>ClusterFixture</code>类型的<code>Dispose</code>方法，当所有测试都已完成并且在内存中群集silos将停止时。 <code>测试集群</code>也有一个接受的构造函数<code>TestClusterOptions</code>可用于配置集群中的silos。</p>
+<p>如果您在silos中使用依赖注入来使服务可用于Grains，则也可以使用以下模式：</p>
 <pre><code class="lang-csharp">public class ClusterFixture : IDisposable
 {
     public ClusterFixture()
@@ -189,19 +183,14 @@ public class TestSiloConfigurations : ISiloBuilderConfigurator {
         });
     }
 }
-</code></pre><h2 id="using-mocks">Using Mocks</h2>
-<p>Orleans also makes it possible to mock many parts of system, and for many of scenarios this is the easiest way to unit test grains.
-This approach does have limitations (e.g. around scheduling reentrancy and serialization), and may require that grains include code used only by your unit tests.
-The <a href="https://github.com/OrleansContrib/OrleansTestKit">Orleans TestKit</a> provides an alternative approach which side-steps many of these limitations.</p>
-<p>For example, let us imagine that the grain we are testing interacts with other grains.
-In order to be able to mock those other grains we also need to mock the <code>GrainFactory</code> member of the grain under test.
-By default <code>GrainFactory</code> is a normal <code>protected</code> property, but most mocking frameworks require properties to be <code>public</code> and <code>virtual</code> to be able to mock them.
-So the first thing we need to do is make <code>GrainFactory</code> both <code>public</code> and <code>virtual</code> property:</p>
+</code></pre><h2 id="使用mocks">使用Mocks</h2>
+<p>Orleans还使模拟系统的许多部分成为可能，并且在许多情况下，这是对grains进行单元测试的最简单方法。 这种方法确实有局限性(例如，围绕调度重入和序列化)，并且可能要求Grain包含仅由单元测试使用的代码。 的<a href="https://github.com/OrleansContrib/OrleansTestKit">OrleansTestKit</a>提供了一种替代方法，可以绕开许多这些限制。</p>
+<p>例如，让我们想象一下我们正在测试的Grains与其他Grains交互。 为了能够模拟其他Grains，我们还需要模拟<code>grain工厂</code>被测Grains的成员。 默认<code>grain工厂</code>是正常的<code>protected</code>属性，但大多数模拟框架要求将属性设置为<code>public</code>和<code>virtual</code>才能嘲笑他们。 所以我们要做的第一件事就是<code>grain工厂</code>都<code>public</code>和<code>virtual</code>属性：</p>
 <pre><code class="lang-csharp">public new virtual IGrainFactory GrainFactory
 {
     get { return base.GrainFactory; }
 }
-</code></pre><p>Now we can create our grain outside of the Orleans runtime and use mocking to control the behaviour of <code>GrainFactory</code>:</p>
+</code></pre><p>现在，我们可以在Orleans运行时之外创建Grains，并使用模拟来控制<code>grain工厂</code>：</p>
 <pre><code class="lang-csharp">using System;
 using System.Threading.Tasks;
 using Orleans;
@@ -230,8 +219,7 @@ namespace Tests
         }
     }
 }
-</code></pre><p>Here we create our grain under test, <code>WorkerGrain</code>, using Moq which means we can then override the behaviour of the <code>GrainFactory</code> so that it returns a mocked <code>IJournalGrain</code>.
-We can then verify that our <code>WorkerGrain</code> interacts with the <code>IJournalGrain</code> as we expect.</p>
+</code></pre><p>在这里，我们创建受测Grains<code>WorkerGrain</code>，使用Moq表示我们可以覆盖<code>grain工厂</code>以便它返回一个模拟<code>IJournalGrain</code>。 然后，我们可以验证我们的<code>WorkerGrain</code>与<code>IJournalGrain</code>如我们所料。</p>
 </article>
           </div>
           

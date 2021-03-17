@@ -78,12 +78,8 @@
 <h1 id="custom-grain-storage">Custom Grain Storage</h1>
 
 <h2 id="writing-a-custom-grain-storage">Writing a Custom Grain Storage</h2>
-<p>In the tutorial on declarative actor storage, we looked at allowing grains to store their state in an Azure table using one of the built-in storage providers.
-While Azure is a great place to squirrel away your data, there are many alternatives.
-In fact, there are so many that there was no way to support them all.
-Instead, Orleans is designed to let you easily add support for your own form of storage by writing a grain storage.</p>
-<p>In this tutorial, we&#39;ll walk through how to write a simple file-based grain storage.
-A file system is not the best place to store grains states as it is local, there can be issues with file locks and the last update date is not sufficient to prevent inconsistency. But it&#39;s an easy example to help us illustrate the implementation of a <code>Grain Storage</code>.</p>
+<p>In the tutorial on declarative actor storage, we looked at allowing grains to store their state in an Azure table using one of the built-in storage providers. While Azure is a great place to squirrel away your data, there are many alternatives. In fact, there are so many that there was no way to support them all. Instead, Orleans is designed to let you easily add support for your own form of storage by writing a grain storage.</p>
+<p>In this tutorial, we&#39;ll walk through how to write a simple file-based grain storage. A file system is not the best place to store grains states as it is local, there can be issues with file locks and the last update date is not sufficient to prevent inconsistency. But it&#39;s an easy example to help us illustrate the implementation of a <code>Grain Storage</code>.</p>
 <h2 id="getting-started">Getting Started</h2>
 <p>An Orleans grain storage is a class that implements <code>IGrainStorage</code> which is included in <a href="https://www.nuget.org/packages/Microsoft.Orleans.Core/">Microsoft.Orleans.Core NuGet package</a>.</p>
 <p>We also inherit from <code>ILifecycleParticipant&lt;ISiloLifecycle&gt;</code> which will allow us to subscribe to a particular event in the lifecycle of the silo.</p>
@@ -221,8 +217,7 @@ namespace GrainStorage
     fileInfo.Refresh();
     grainState.ETag = fileInfo.LastWriteTimeUtc.ToString();
 }
-</code></pre><p>Similarly as reading, we use <code>_jsonSettings</code> to write the state.
-The current ETag is used to check against the last updated time in UTC of the file. If the date is different, it means that another activation of the same grain changed the state concurrently. In this situation, we throw an <code>InconsistentStateException</code> which will result in the current activation being killed to prevent overwritting the state previously saved by the other activated grain.</p>
+</code></pre><p>Similarly as reading, we use <code>_jsonSettings</code> to write the state. The current ETag is used to check against the last updated time in UTC of the file. If the date is different, it means that another activation of the same grain changed the state concurrently. In this situation, we throw an <code>InconsistentStateException</code> which will result in the current activation being killed to prevent overwritting the state previously saved by the other activated grain.</p>
 <h2 id="clearing-state">Clearing State</h2>
 <p>Clearing the state would be deleting the file if the file exists.</p>
 <pre><code class="lang-csharp">public Task ClearStateAsync(string grainType, GrainReference grainReference, IGrainState grainState)
